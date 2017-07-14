@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.igalaxy.boot.mapper.sys.SysResourceMapper">
+
+    <select id="queryById" parameterType="long" resultType="SysResource">
+        select * from tb_sys_resource t
+        where t.id = #{id} AND t.disabled = 0
+    </select>
+
+    <select id="getAll" resultType="SysResource">
+        select * from tb_sys_resource t
+        where t.disabled = 0
+    </select>
+
+
+    <select id="selectAllResourceByUserId" parameterType="long" resultType="SysResource">
+        SELECT res.* FROM tb_sys_user u
+        INNER JOIN tb_sys_user_role ur
+        ON u.`id` = ur.`userId` AND ur.`disabled` = 0
+        INNER JOIN tb_sys_role role
+        ON ur.`roleId` = role.`id` AND role.`disabled` = 0
+        INNER JOIN tb_sys_role_resource roleRes
+        ON role.`id` = roleRes.`roleId` AND roleRes.`disabled` = 0
+        INNER JOIN tb_sys_resource res
+        ON res.`id` = roleRes.`resourceId` AND res.`disabled` = 0
+        WHERE u.`id` = #{userId}
+        group by res.id
+    </select>
+
+    <select id="selectAllResourceByRoleId" parameterType="long" resultMap="SysResourceMap">
+        SELECT
+        t.*,
+        CASE WHEN r.id IS NOT NULL THEN 1 ELSE 0 END hasPermission
+        FROM
+        tb_sys_resource t
+        LEFT JOIN tb_sys_role_resource r
+        ON t.`id` = r.`resourceId` AND r.`disabled` = 0 AND r.`roleId` = #{roleId}
+        WHERE t.`disabled` = 0
+    </select>
+
+    <resultMap id="SysResourceMap" type="SysResource">
+        <id column="id" property="id"/>
+        <collection property="permissions" column="id" ofType="SysPermission" select="selectAllPermission"/>
+    </resultMap>
+
+    <select id="selectAllPermission" resultType="SysPermission">
+        select * from tb_sys_permission t
+        where t.resourceId = #{id} and t.disabled = 0
+    </select>
+</mapper>

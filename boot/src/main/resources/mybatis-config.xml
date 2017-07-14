@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--配置全局属性-->
+    <settings>
+        <!--使用jdbc的getGeneratekeys获取自增主键值-->
+        <setting name="useGeneratedKeys" value="true"/>
+        <!--使用列别名替换别名　　默认true-->
+        <setting name="useColumnLabel" value="true"/>
+        <!--开启驼峰命名转换Table:create_time到 Entity(createTime)-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+
+    <typeHandlers>
+        <typeHandler javaType="com.igalaxy.boot.enums.SysProperty$WhetherEnum"
+                     handler="com.igalaxy.boot.enums.SysProperty$WhetherEnumValueHandler"/>
+        <typeHandler javaType="com.igalaxy.boot.enums.SysProperty$LogStatusEnum"
+                     handler="com.igalaxy.boot.enums.SysProperty$LogStatusEnumValueHandler"/>
+        <typeHandler javaType="com.igalaxy.boot.enums.SysProperty$StgFilePrefixEnum"
+                     handler="com.igalaxy.boot.enums.SysProperty$StgFilePrefixEnumValueHandler"/>
+        <typeHandler javaType="com.igalaxy.boot.enums.SysProperty$StgFileStatusEnum"
+                     handler="com.igalaxy.boot.enums.SysProperty$StgFileStatusEnumValueHandler"/>
+    </typeHandlers>
+    <mappers>
+        <!-- 公共配置 -->
+        <mapper resource="mapper/Pager.xml"/>
+    </mappers>
+</configuration>

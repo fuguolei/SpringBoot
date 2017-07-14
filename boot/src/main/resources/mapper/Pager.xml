@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="Pager">
+    <sql id="OrderCriteria">
+        <if test="orderType != null">
+            order by CREATE_DATE ${orderType}
+        </if>
+    </sql>
+
+    <sql id="beforePage">
+        <if test="rowStart != null">
+            <if test="rowEnd != null">
+                select * from ( select row_.*, rownum
+                rownum_ from (
+            </if>
+        </if>
+    </sql>
+
+    <sql id="afterPage">
+        <if test="rowStart != null">
+            <if test="rowEnd != null">
+                <![CDATA[) row_ ) where rownum_ >= #{rowStart} and rownum_ < #{rowEnd}]]>
+            </if>
+        </if>
+    </sql>
+
+    <sql id="mysqlPage">
+        <if test="pageNo != null">
+            <if test="pageSize != null">
+                limit ${(pageNo - 1) * pageSize}, ${pageSize}
+            </if>
+        </if>
+    </sql>
+
+</mapper>

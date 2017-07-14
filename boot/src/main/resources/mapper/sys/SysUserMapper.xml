@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.igalaxy.boot.mapper.sys.SysUserMapper">
+
+    <select id="getUserByAccount" parameterType="string" resultMap="allMap">
+        select * from tb_sys_user t
+        where t.disabled = 0 and t.account = #{account};
+    </select>
+
+    <select id="queryById" parameterType="long" resultMap="allMap">
+        select * from tb_sys_user t
+        where t.disabled = 0 and t.id = #{id}
+    </select>
+
+
+    <update id="resetPassword" parameterType="map">
+        update tb_sys_user
+        set updateTime = now(),
+        updateUser = #{updateUser},
+        password = #{password}
+        where id = #{id}
+    </update>
+
+    <resultMap id="allMap" type="SysUser">
+        <id column="id" property="id"/>
+        <collection property="roles" column="id" ofType="SysRole" select="selecAllRole"/>
+    </resultMap>
+
+    <select id="selecAllRole" resultMap="allRoleMap">
+        select r.* from tb_sys_user_role t
+        inner join tb_sys_role r
+        on t.roleId = r.id and r.disabled = 0
+        where t.disabled = 0 and t.userId = #{id}
+    </select>
+
+    <resultMap id="allRoleMap" type="SysRole">
+        <id column="id" property="id"/>
+        <collection property="resources" column="id" ofType="SysResource" select="selectAllResource"/>
+        <collection property="permissions" column="id" ofType="SysPermission" select="selectAllPermission"/>
+    </resultMap>
+
+    <select id="selectAllResource" resultType="SysResource">
+        select * from tb_sys_role_resource t
+        inner join tb_sys_resource r
+        ON t.resourceId = r.id and r.disabled = 0
+        where t.roleId = #{id} and t.disabled = 0
+        group by r.url
+    </select>
+
+    <select id="selectAllPermission" resultType="SysPermission">
+        select * from tb_sys_role_permission t
+        inner join tb_sys_permission p
+        ON t.permissionId = p.id and p.disabled = 0
+        where t.roleId = #{id} and t.disabled = 0
+    </select>
+
+    <select id="queryPage" parameterType="map" resultType="SysUser">
+        SELECT t.* FROM tb_sys_user t
+        WHERE t.disabled = 0
+        <if test="searchUserAccount != null">
+            and t.account like CONCAT('%', #{searchUserAccount},'%')
+        </if>
+        <if test="searchUserName != null">
+            and t.name like CONCAT('%', #{searchUserName},'%')
+        </if>
+        order by id desc
+        <include refid="Pager.mysqlPage"/>
+    </select>
+
+
+    <select id="queryPageCount" parameterType="map" resultType="int">
+        SELECT COUNT(1) FROM tb_sys_user t
+        WHERE t.disabled = 0
+        <if test="txtName != null">
+            and t.name like CONCAT('%', #{txtName},'%')
+        </if>
+    </select>
+
+    <insert id="save" parameterType="SysUser">
+        insert into tb_sys_user
+        (`name`, account, password,createUser, createTime, updateUser, updateTime, disabled,
+        repeatPassword)
+        values
+        (#{name}, #{account}, #{password}, #{createUser}, now(), #{updateUser}, now(), 0,
+        #{repeatPassword})
+        <selectKey resultType="long" keyProperty="id">
+            select LAST_INSERT_ID() as id
+        </selectKey>
+    </insert>
+
+
+    <update id="update" parameterType="SysUser">
+        update tb_sys_user t
+        <trim prefix="set" suffixOverrides=",">
+            t.updateTime = now(),
+            t.updateUser = #{updateUser},
+            <if test="name != null">t.name = #{name},</if>
+            <if test="password != null">t.password = #{password},</if>
+        </trim>
+        where t.id = #{id}
+    </update>
+
+
+    <update id="delete" parameterType="SysUser">
+        update tb_sys_user t
+        set t.updateTime = now(),
+        t.updateUser = #{updateUser},
+        t.disabled = 1
+        where t.id = #{id}
+    </update>
+
+    <update id="setPassword" parameterType="SysUser">
+        update tb_sys_user t
+        <trim prefix="set" suffixOverrides=",">
+            t.updateTime = now(),
+            t.updateUser = #{updateUser},
+            t.password = #{password},
+            t.repeatPassword = #{repeatPassword}
+        </trim>
+        where t.id = #{id}
+    </update>
+
+    <update id="replaceUser" parameterType="map">
+        update tb_sys_user t
+        <trim prefix="set" suffixOverrides=",">
+            t.updateTime = now(),
+            t.updateUser = #{updateUser},
+            t.parentId = #{replaceUser}
+        </trim>
+        where t.disabled = 0 and t.parentId = #{userId} and t.id != #{replaceId}
+    </update>
+
+</mapper>

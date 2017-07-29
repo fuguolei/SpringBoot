@@ -45,6 +45,7 @@ public class BaseController {
         Object o = this.getSession().getAttribute("currentUser");
         if (o == null)
             return null;
+        logger.debug("currentUser:{}", o);
         return (SysUser) o;
     }
 

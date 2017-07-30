@@ -5,6 +5,8 @@ import com.google.code.kaptcha.Producer;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +23,7 @@ import java.io.IOException;
 @Controller
 @RequestMapping("kaptcha")
 public class KaptchaController {
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private Producer captchaProducer;
@@ -49,7 +52,7 @@ public class KaptchaController {
 
         // store the text in the session
         session.setAttribute(Constants.KAPTCHA_SESSION_KEY, capText);
-
+        logger.debug("capText:{}", capText);
         // create the image with the text
         BufferedImage bi = captchaProducer.createImage(capText);
         ServletOutputStream out = response.getOutputStream();

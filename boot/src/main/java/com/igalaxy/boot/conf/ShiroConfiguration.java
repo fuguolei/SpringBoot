@@ -12,6 +12,7 @@ import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.filter.authc.LogoutFilter;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
@@ -28,7 +29,6 @@ import java.util.*;
 public class ShiroConfiguration {
 
     private static Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
-    SysResourceService sysResourceService;
 
     @Bean(name = "sysResourceService")
     public SysResourceService getSysResourceService() {
@@ -80,6 +80,12 @@ public class ShiroConfiguration {
         return aasa;
     }
 
+    public LogoutFilter getLogoutFilter() {
+        LogoutFilter logoutFilter = new LogoutFilter();
+        logoutFilter.setRedirectUrl("/admin");
+        return logoutFilter;
+    }
+
     @Bean(name = "shiroFilter")
     public ShiroFilterFactoryBean getShiroFilterFactoryBean() {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
@@ -87,12 +93,14 @@ public class ShiroConfiguration {
                 .setSecurityManager(getDefaultWebSecurityManager());
         shiroFilterFactoryBean.setLoginUrl("/admin/login");
         shiroFilterFactoryBean.setSuccessUrl("/admin/index.html");
+        shiroFilterFactoryBean.setUnauthorizedUrl("/admin/unauthorized.html");
         Map<String, Filter> filterMap = new HashMap<>();
 //        CustomFormAuthenticationFilter filter = new CustomFormAuthenticationFilter();
 //        filter.setLoginUrl("/admin/login");
 //        filter.setPasswordParam("j_password");
 //        filter.setUsernameParam("j_username");
 //        filterMap.put("authc", filter);
+        filterMap.put("logout", getLogoutFilter());
         shiroFilterFactoryBean.setFilters(filterMap);
         filterChainDefinitionMap.put("/admin/login.html", "anon");
         filterChainDefinitionMap.put("/admin/login.json", "anon");

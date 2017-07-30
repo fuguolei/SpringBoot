@@ -17,6 +17,9 @@ spring:
 #      suffix: .jsp
   thymeleaf:
     cache: false
+    cache-period: 0
+  template:
+    cache: false
   redis:
     host: 101.200.148.203
     port: 26379

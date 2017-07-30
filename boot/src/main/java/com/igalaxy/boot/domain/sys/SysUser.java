@@ -9,6 +9,9 @@ import java.util.List;
  * Created by fuguolei
  */
 public class SysUser extends BaseDomain {
+
+    private static final long serialVersionUID = -427838794924380991L;
+    
     private String name;
     private String account;
     private String password;

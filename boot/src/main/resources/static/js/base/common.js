@@ -1,9 +1,9 @@
 /**
-*  靳龙
-*/
+ *  靳龙
+ */
 var userType = {
     salesUser: 1,
-    businessUser : 2
+    businessUser: 2
 };
 
 Date.prototype.Format = function (fmt) { //author: meizz
@@ -18,7 +18,7 @@ Date.prototype.Format = function (fmt) { //author: meizz
     };
     if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
     for (var k in o)
-    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
     return fmt;
 }
 
@@ -30,7 +30,7 @@ function ajax(userConfig) {
         type: "POST",
         cache: false,
         dataType: "json",
-        success: function(result) {
+        success: function (result) {
             if (result.success && userConfig.successCallBack) {
                 userConfig.successCallBack(result);
             } else if (!result.success && userConfig.errorCallBack) {
@@ -39,7 +39,7 @@ function ajax(userConfig) {
                 sysAlert(result.msg);
             }
         },
-        error: function(msg) {
+        error: function (msg) {
             alert("系统错误,请与管理员联系");
         }
     }
@@ -52,7 +52,7 @@ function sysAlert(msg) {
 }
 
 
-function closeDialog(){
+function closeDialog() {
     $(".easyui-dialog").dialog("close");
 }
 
@@ -69,12 +69,12 @@ function resultDataProcess(formId, data) {
     } else {
         obj = data;
     }
-    
+
     if (obj.success) {
         if (formId != null) {
             clearFormValue(formId);
         }
-       
+
         closeDialog();
         listView.api().datagrid("reload");
     }
@@ -96,14 +96,17 @@ function enumFormat(value, row, idnex) {
 }
 
 function getOrdDiscountTypeEnum(value) {
-    switch(value) {
-        case 1: case "1":
+    switch (value) {
+        case 1:
+        case "1":
             return "NoDiscount";
             break;
-        case 2: case "2":
+        case 2:
+        case "2":
             return "ReliefOffers";
             break;
-        case 3: case 3:
+        case 3:
+        case 3:
             return "Discount";
             break;
     }
@@ -111,54 +114,93 @@ function getOrdDiscountTypeEnum(value) {
 }
 
 function refreshPage() {
-       location.reload();
+    location.reload();
 }
 
 function getSearchParas() {
-            var params = {};
-            $(".search").find("input[type=text]").each(function() {
-                var key = $(this).attr("id");
-                var value = $(this).val();
-                params[key] = value;
-            });
-            $(".search").find("input[type=hidden]").each(function() {
-                var key = $(this).attr("id");
-                var value = $(this).val();
-                if (!key) {
-                    key = $(this).attr("name");
-                }
-                params[key] = value;
-            });
+    var params = {};
+    $(".search").find("input[type=text]").each(function () {
+        var key = $(this).attr("id");
+        var value = $(this).val();
+        params[key] = value;
+    });
+    $(".search").find("input[type=hidden]").each(function () {
+        var key = $(this).attr("id");
+        var value = $(this).val();
+        if (!key) {
+            key = $(this).attr("name");
+        }
+        params[key] = value;
+    });
 
-            $(".search").find(".easyui-datebox").each(function() {
-                var key = $(this).attr("id");
-                var value = $(this).datetimebox("getValue")
-                params[key] = value;
-            });
+    $(".search").find(".easyui-datebox").each(function () {
+        var key = $(this).attr("id");
+        var value = $(this).datetimebox("getValue")
+        params[key] = value;
+    });
 
-            $(".search").find(".easyui-combobox").each(function() {
-                var key = $(this).attr("id");
-                var value = $(this).combobox("getValue")
-                params[key] = value;
-            });
-            return JSON.stringify(params);
+    $(".search").find(".easyui-combobox").each(function () {
+        var key = $(this).attr("id");
+        var value = $(this).combobox("getValue")
+        params[key] = value;
+    });
+    return JSON.stringify(params);
 }
 
-$(function() {
+$(function () {
     if ($("#btnExportExcel").length > 0) {
         var html = new Array();
-        var pathname=location.pathname;
-        var path = path=pathname.substr(0, pathname.lastIndexOf('/')+1);
+        var pathname = location.pathname;
+        var path = path = pathname.substr(0, pathname.lastIndexOf('/') + 1);
         html.push('<form method="post" action="');
         html.push(path);
         html.push('excel.html" target="_blank" id="exportExcel">');
         html.push('<input type="hidden" id="search" name="search" />');
         html.push("</form>");
         $(document.body).append(html.join(""));
-        $("#btnExportExcel").click(function() {
+        $("#btnExportExcel").click(function () {
             $("#search").val(getSearchParas());
             $("#exportExcel").submit();
         });
     }
-    
+
 });
+
+$.fn.formSubmit = function (userConfig) {
+    if (!$(this).form('validate'))
+        return;
+
+    var config = {
+        type: "POST",
+        cache: false,
+        dataType: "json",
+        success: function (result) {
+            if (result.success && userConfig.success) {
+                userConfig.success(result);
+            } else if (!result.success && userConfig.error) {
+                userConfig.error(result);
+            } else {
+                sysAlert(result.msg);
+            }
+        },
+        error: function (msg) {
+            alert("系统错误,请与管理员联系");
+        }
+    }
+    if (userConfig.data)
+        $.extend(userConfig.data, $(this).serializeObject())
+    else
+        userConfig.data = $(this).serializeObject()
+    $.extend(config, userConfig);
+    $.ajax(config);
+}
+
+$.fn.serializeObject = function () {
+    var obj = new Object();
+    $.each(this.serializeArray(), function (index, param) {
+        if (!(param.name in obj)) {
+            obj[param.name] = param.value;
+        }
+    });
+    return obj;
+};

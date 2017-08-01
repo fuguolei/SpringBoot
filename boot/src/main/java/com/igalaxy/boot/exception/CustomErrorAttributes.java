@@ -77,7 +77,7 @@ public class CustomErrorAttributes extends DefaultErrorAttributes
                 errorAttributes.put("msg", "请登录");
 
                 //json返回数据时，htto status 返回200
-                requestAttributes.setAttribute("javax.servlet.error.status_code", HttpStatus.OK, SCOPE_REQUEST);
+                requestAttributes.setAttribute("javax.servlet.error.status_code", 200, SCOPE_REQUEST);
                 return;
             }
             if (error instanceof UnauthorizedException) {
@@ -85,7 +85,7 @@ public class CustomErrorAttributes extends DefaultErrorAttributes
                 errorAttributes.put("msg", "您无此权限");
 
                 //json返回数据时，htto status 返回200
-                requestAttributes.setAttribute("javax.servlet.error.status_code", HttpStatus.OK, SCOPE_REQUEST);
+                requestAttributes.setAttribute("javax.servlet.error.status_code", 200, SCOPE_REQUEST);
                 return;
             }
 

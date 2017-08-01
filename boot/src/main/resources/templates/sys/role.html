@@ -16,14 +16,14 @@
             font-size: 16px;
         }
     </style>
-    <link rel="stylesheet" type="text/css" href="/jquery-easyui-1.3.3/themes/default/easyui.css"/>
-    <link rel="stylesheet" type="text/css" href="/jquery-easyui-1.3.3/themes/icon.css"/>
+    <link rel="stylesheet" type="text/css" href="/jquery-easyui/themes/default/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="/jquery-easyui/themes/icon.css"/>
     <link rel="stylesheet" type="text/css" href="/css/common.css"/>
-    <script type="text/javascript" src="/jquery-easyui-1.3.3/jquery.min.js"></script>
-    <script type="text/javascript" src="/jquery-easyui-1.3.3/jquery.easyui.min.js"></script>
-    <script type="text/javascript" src="/jquery-easyui-1.3.3/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="/jquery-easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="/jquery-easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/jquery-easyui/locale/easyui-lang-zh_CN.js"></script>
     <script type="text/javascript" src="/js/jquery.json.js"></script>
-    <script type="text/javascript" src="/js/base/common.js"></script>
+    <script type="text/javascript" src="/js/base/common.js?1"></script>
     <script type="text/javascript" src="/js/base/listview.js?1"></script>
     <script type="text/javascript" src="/js/base/fileupload.js"></script>
 
@@ -58,9 +58,9 @@
      buttons="#dlg-buttons">
 
     <form method="post" class="bootstrap-frm" id="addRoleForm">
-        <label> <span>角色名称:</span> <input type="text" id="txtAddName" class="easyui-validatebox"
+        <label> <span>角色名称:</span> <input type="text" id="txtAddName" name="name" class="easyui-validatebox"
                                           required="true"/></label>
-        <label> <span>角色描述:</span> <input type="text" id="txtAddDesc" class="easyui-validatebox"
+        <label> <span>角色描述:</span> <input type="text" id="txtAddDesc" name="description" class="easyui-validatebox"
                                           required="true"/></label>
     </form>
 </div>
@@ -73,11 +73,11 @@
 </div>
 <div id="editRole" class="easyui-dialog" style="width:500px;height:300px;padding:10px 20px;" closed="true"
      buttons="#editButtons">
-    <form method="post" class="bootstrap-frm" id="editRoleForm">
-        <input type="hidden" id="txtEditId"/>
-        <label> <span>角色名称:</span> <input type="text" id="txtEditName" class="easyui-validatebox"
+    <form method="post" class="bootstrap-frm" id="editRoleForm" accept="json">
+        <input type="hidden" id="txtEditId" name="id"/>
+        <label> <span>角色名称:</span> <input type="text" id="txtEditName" name="name" class="easyui-validatebox"
                                           required="true"/></label>
-        <label> <span>角色描述:</span> <input type="text" id="txtEditDesc" class="easyui-validatebox"
+        <label> <span>角色描述:</span> <input type="text" id="txtEditDesc" name="description" class="easyui-validatebox"
                                           required="true"/></label>
     </form>
 </div>
@@ -109,18 +109,10 @@
     }
 
     function addRole() {
-        $("#addRoleForm").form("submit", {
-            url: "/admin/sys/role/addRole.json",
-            onSubmit: function (params) {
-                var isValid = $(this).form('validate');
-                if (isValid) {
-                    params.name = $("#txtAddName").val();
-                    params.description = $("#txtAddDesc").val();
-                }
-                return isValid;
-            },
-            success: function (text) {
-                resultDataProcess("addRoleForm", text);
+        $("#addRoleForm").formSubmit({
+            url: "/admin/sys/role/editRole.json",
+            success: function (data) {
+                resultDataProcess("addRoleForm", data);
             }
         });
     }
@@ -136,29 +128,10 @@
 
     //删除角色
     function editRole() {
-//        $.ajax({
-//            url: "/admin/sys/role/editRole.json",
-//            method:'POST',
-//            data: {
-//                name: $("#txtEditName").val(),
-//                description: $("#txtEditDesc").val(),
-//                id: $("#txtEditId").val()
-//            },
-//            success: resultDataProcess("addRoleForm", text)
-//    })
-        $("#editRoleForm").form("submit", {
+        $("#editRoleForm").formSubmit({
             url: "/admin/sys/role/editRole.json",
-            onSubmit: function (params) {
-                var isValid = $(this).form('validate');
-                if (isValid) {
-                    params.name = $("#txtEditName").val();
-                    params.description = $("#txtEditDesc").val();
-                    params.id = $("#txtEditId").val();
-                }
-                return isValid;
-            },
-            success: function (text) {
-                resultDataProcess("addRoleForm", text);
+            success: function (data) {
+                resultDataProcess(editRole, data);
             }
         });
     }
@@ -172,7 +145,7 @@
                     data: {
                         id: row.id
                     },
-                    successCallBack: function (data) {
+                    success: function (data) {
                         resultDataProcess(null, data);
                     }
                 });

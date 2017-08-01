@@ -1,6 +1,7 @@
 package com.igalaxy.boot.controller.base;
 
 import com.google.code.kaptcha.Constants;
+import com.igalaxy.boot.domain.dto.BaseResult;
 import com.igalaxy.boot.domain.dto.MenuJson;
 import com.igalaxy.boot.domain.sys.SysResource;
 import com.igalaxy.boot.domain.sys.SysUser;
@@ -11,6 +12,7 @@ import org.apache.commons.collections.map.HashedMap;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by jinlong on 2017/1/30.
+ * Created by fuguolei on 2017/1/30.
  */
 @Controller
 @RequestMapping("/admin")
@@ -37,6 +39,37 @@ public class AdminIndexController extends BaseController {
     public String index() {
         return "redirect:/admin/index.html";
     }
+
+    @RequestMapping(value = "/index.html", method = RequestMethod.GET)
+    public ModelAndView index_jsp(HttpServletResponse response) throws IOException {
+        List<SysResource> resources = sysResourceService.selectAllResourceByUserId(getUserId());
+        List<MenuJson> menuJsons = MenuJson.convertMemuList(resources);
+        Map<String, Object> params = new HashedMap();
+        params.put("menus", menuJsons);
+        params.put("currentUser", getUser());
+        writeLog("进入系统");
+        return new ModelAndView("admin/index", params);
+    }
+
+    @RequestMapping(value = "/logout.html", method = RequestMethod.GET)
+    public String logout_jsp(HttpServletResponse response) throws IOException {
+        return "admin/login";
+    }
+
+
+    @Autowired
+    SysUserService sysUserService;
+
+    @RequestMapping(value = "login", produces = "text/html")
+    public String loginHtml() {
+        return "admin/login";
+    }
+
+    @RequestMapping("login")
+    public String login(HttpServletResponse response) {
+        return writeResult(response, new BaseResult(false, -1, "请重新登录"));
+    }
+
 
     @RequestMapping(value = "login.json", method = RequestMethod.POST)
     public String login(SysUser sysUser, String captcha, HttpServletResponse response) throws ServletException, IOException {
@@ -63,27 +96,4 @@ public class AdminIndexController extends BaseController {
         }
     }
 
-    @Resource
-    SysUserService sysUserService;
-
-    @RequestMapping(value = "/index.html", method = RequestMethod.GET)
-    public ModelAndView index_jsp(HttpServletResponse response) throws IOException {
-        List<SysResource> resources = sysResourceService.selectAllResourceByUserId(getUserId());
-        List<MenuJson> menuJsons = MenuJson.convertMemuList(resources);
-        Map<String, Object> params = new HashedMap();
-        params.put("menus", menuJsons);
-        params.put("currentUser", getUser());
-        writeLog("进入系统");
-        return new ModelAndView("admin/index", params);
-    }
-
-    @RequestMapping(value = "/login.html", method = RequestMethod.GET)
-    public String login_jsp(HttpServletResponse response) throws IOException {
-        return "admin/login";
-    }
-
-    @RequestMapping(value = "/logout.html", method = RequestMethod.GET)
-    public String logout_jsp(HttpServletResponse response) throws IOException {
-        return "admin/login";
-    }
 }

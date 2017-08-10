@@ -13,6 +13,7 @@ import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.filter.authc.LogoutFilter;
+import org.apache.shiro.web.filter.authc.UserFilter;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
@@ -86,11 +87,24 @@ public class ShiroConfiguration {
         return logoutFilter;
     }
 
+    @Bean
+    public UserFilter getAdminFilter() {
+        UserFilter filter = new UserFilter();
+        filter.setLoginUrl("/admin/login");
+        return filter;
+    }
+
+    @Bean
+    public UserFilter getUserFilter() {
+        UserFilter filter = new UserFilter();
+        filter.setLoginUrl("/login");
+        return filter;
+    }
+
     @Bean(name = "shiroFilter")
     public ShiroFilterFactoryBean getShiroFilterFactoryBean() {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
-        shiroFilterFactoryBean
-                .setSecurityManager(getDefaultWebSecurityManager());
+        shiroFilterFactoryBean.setSecurityManager(getDefaultWebSecurityManager());
         shiroFilterFactoryBean.setLoginUrl("/admin/login");
         shiroFilterFactoryBean.setSuccessUrl("/admin/index.html");
         shiroFilterFactoryBean.setUnauthorizedUrl("/admin/unauthorized.html");
@@ -99,13 +113,15 @@ public class ShiroConfiguration {
 //        filter.setLoginUrl("/admin/login");
 //        filter.setPasswordParam("j_password");
 //        filter.setUsernameParam("j_username");
-//        filterMap.put("authc", filter);
+//        filterMap.put("adminAuthc", getAdminFilter());
+//        filterMap.put("userAuthc", getUserFilter());
         filterMap.put("logout", getLogoutFilter());
         shiroFilterFactoryBean.setFilters(filterMap);
         filterChainDefinitionMap.put("/admin/login", "anon");
         filterChainDefinitionMap.put("/admin/login.json", "anon");
         filterChainDefinitionMap.put("/admin/logout.html", "logout");
         filterChainDefinitionMap.put("/admin/**", "authc");
+//        filterChainDefinitionMap.put("/user/**", "userAuthc");
         List<SysResource> resources = getSysResourceService().getAll();
         filterChainDefinitionMap.put("/admin/index.html", "perms[user:index]");
         for (SysResource resource : resources) {

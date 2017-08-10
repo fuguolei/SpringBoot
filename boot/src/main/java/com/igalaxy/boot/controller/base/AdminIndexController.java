@@ -4,10 +4,10 @@ import com.google.code.kaptcha.Constants;
 import com.igalaxy.boot.domain.dto.BaseResult;
 import com.igalaxy.boot.domain.dto.MenuJson;
 import com.igalaxy.boot.domain.sys.SysResource;
-import com.igalaxy.boot.domain.sys.SysUser;
+import com.igalaxy.boot.domain.usr.UsrUser;
 import com.igalaxy.boot.service.sys.SysResourceService;
-import com.igalaxy.boot.service.sys.SysUserService;
-import com.igalaxy.boot.util.CommonUtils;
+import com.igalaxy.boot.service.usr.UsrUserService;
+import com.igalaxy.boot.util.SessionUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -35,6 +35,7 @@ public class AdminIndexController extends BaseController {
     @Resource
     private SysResourceService sysResourceService;
 
+
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index() {
         return "redirect:/admin/index.html";
@@ -46,7 +47,7 @@ public class AdminIndexController extends BaseController {
         List<MenuJson> menuJsons = MenuJson.convertMemuList(resources);
         Map<String, Object> params = new HashedMap();
         params.put("menus", menuJsons);
-        params.put("currentUser", getUser());
+        params.put("currentUser", usrUserService.queryById(getUserId()));
         writeLog("进入系统");
         return new ModelAndView("admin/index", params);
     }
@@ -58,7 +59,7 @@ public class AdminIndexController extends BaseController {
 
 
     @Autowired
-    SysUserService sysUserService;
+    UsrUserService usrUserService;
 
     @RequestMapping(value = "login", produces = "text/html")
     public String loginHtml() {
@@ -70,11 +71,10 @@ public class AdminIndexController extends BaseController {
         return writeResult(response, new BaseResult(false, -1, "请重新登录"));
     }
 
-
     @RequestMapping(value = "login.json", method = RequestMethod.POST)
-    public String login(SysUser sysUser, String captcha, HttpServletResponse response) throws ServletException, IOException {
+    public String login(UsrUser usrUser, String captcha, HttpServletResponse response) throws ServletException, IOException {
 
-        logger.debug("user:{}", sysUser);
+        logger.debug("user:{}", usrUser);
         logger.debug("captcha:{}", captcha);
         Subject currentUser = SecurityUtils.getSubject();
         String sessionCaptcha = (String) currentUser.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
@@ -82,13 +82,13 @@ public class AdminIndexController extends BaseController {
         if (!sessionCaptcha.equalsIgnoreCase(captcha))
             return writeErrorResult(response, -2, "验证码错误");
 
-        UsernamePasswordToken token = new UsernamePasswordToken(sysUser.getAccount(), sysUser.getPassword());
+        UsernamePasswordToken token = new UsernamePasswordToken(usrUser.getAccount(), usrUser.getPassword());
         try {
             if (!currentUser.isAuthenticated()) {//使用shiro来验证
                 token.setRememberMe(true);
                 currentUser.login(token);//验证角色和权限
-                SysUser user = sysUserService.getUserByAccount(sysUser.getAccount());
-                CommonUtils.setCurrentUser(user);
+                UsrUser user = usrUserService.getUserByAccount(usrUser.getAccount());
+                SessionUtils.setUserId(user.getId());
             }
             return writeSuccessResult(response, "登录成功");
         } catch (Exception e) {

@@ -3,12 +3,12 @@ package com.igalaxy.boot.controller.sys;
 import com.igalaxy.boot.controller.base.BaseController;
 import com.igalaxy.boot.domain.dto.BaseResult;
 import com.igalaxy.boot.domain.sys.SysRole;
-import com.igalaxy.boot.domain.sys.SysUser;
+import com.igalaxy.boot.domain.usr.UsrUser;
 import com.igalaxy.boot.domain.sys.SysUserRole;
 import com.igalaxy.boot.service.base.BaseService;
 import com.igalaxy.boot.service.sys.SysRoleService;
 import com.igalaxy.boot.service.sys.SysUserRoleService;
-import com.igalaxy.boot.service.sys.SysUserService;
+import com.igalaxy.boot.service.usr.UsrUserService;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +34,7 @@ public class SysUserRoleController extends BaseController {
     SysRoleService sysRoleService;
 
     @Resource
-    SysUserService sysUserService;
+    UsrUserService usrUserService;
 
     @Override
     protected BaseService getService() {
@@ -66,8 +66,8 @@ public class SysUserRoleController extends BaseController {
     public String addUserRole(SysUserRole userRole, HttpServletResponse response) {
         BaseResult<SysUserRole> result = sysUserRoleService.save(userRole);
         SysRole role = sysRoleService.queryById(userRole.getRoleId());
-        SysUser sysUser = sysUserService.queryById(userRole.getUserId());
-        writeLog(result, String.format("从角色[%s]添加用户[%s]", role.getName(), sysUser.getName()));
+        UsrUser usrUser = usrUserService.queryById(userRole.getUserId());
+        writeLog(result, String.format("从角色[%s]添加用户[%s]", role.getName(), usrUser.getName()));
         return writeResult(response, result);
     }
 

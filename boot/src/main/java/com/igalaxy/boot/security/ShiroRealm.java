@@ -4,9 +4,9 @@ import com.alibaba.druid.util.StringUtils;
 import com.igalaxy.boot.domain.sys.SysPermission;
 import com.igalaxy.boot.domain.sys.SysResource;
 import com.igalaxy.boot.domain.sys.SysRole;
-import com.igalaxy.boot.domain.sys.SysUser;
-import com.igalaxy.boot.service.sys.SysUserService;
-import com.igalaxy.boot.util.CommonUtils;
+import com.igalaxy.boot.domain.usr.UsrUser;
+import com.igalaxy.boot.service.usr.UsrUserService;
+import com.igalaxy.boot.util.SessionUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -24,13 +24,13 @@ import java.util.Set;
 public class ShiroRealm extends AuthorizingRealm {
 
     @Autowired
-    SysUserService sysUserService;
+    UsrUserService usrUserService;
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(
             AuthenticationToken token) throws AuthenticationException {
         String id = (String) token.getPrincipal();
-        SysUser user = sysUserService.getUserByAccount(id);
+        UsrUser user = usrUserService.getUserByAccount(id);
         if (user == null) {
             throw new UnknownAccountException();
         }
@@ -43,10 +43,10 @@ public class ShiroRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(
             PrincipalCollection principals) {
-        SysUser user = CommonUtils.getCurrentUser();
+        Long userId = SessionUtils.getUserId();
         String username = (String) principals.getPrimaryPrincipal();
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-        List<SysRole> uroles = user.getRoles();
+        List<SysRole> uroles = usrUserService.queryById(userId).getRoles();
         Set<String> perms = new HashSet<String>();
         perms.add("user:index");
         for (SysRole role : uroles) {

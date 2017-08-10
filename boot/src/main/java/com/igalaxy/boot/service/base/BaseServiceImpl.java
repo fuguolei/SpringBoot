@@ -3,9 +3,8 @@ package com.igalaxy.boot.service.base;
 import com.igalaxy.boot.domain.BaseDomain;
 import com.igalaxy.boot.domain.dto.BaseResult;
 import com.igalaxy.boot.domain.dto.ListViewPage;
-import com.igalaxy.boot.domain.sys.SysUser;
 import com.igalaxy.boot.mapper.BaseMapper;
-import com.igalaxy.boot.util.CommonUtils;
+import com.igalaxy.boot.util.SessionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,15 +20,8 @@ public abstract class BaseServiceImpl<T> implements BaseService<T> {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     protected Long getUserId() {
-        SysUser sysUser = CommonUtils.getCurrentUser();
-        if (sysUser != null)
-            return sysUser.getId();
-        else
-            return 0l;
-    }
-
-    protected SysUser getUser() {
-        return CommonUtils.getCurrentUser();
+        Long userId = SessionUtils.getUserId();
+        return userId != null ? userId : 0l;
     }
 
     protected Map<String, Object> getParamsMap() {

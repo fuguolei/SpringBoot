@@ -1,6 +1,7 @@
-package com.igalaxy.boot.domain.sys;
+package com.igalaxy.boot.domain.usr;
 
 import com.igalaxy.boot.domain.BaseDomain;
+import com.igalaxy.boot.domain.sys.SysRole;
 import com.igalaxy.boot.enums.SysProperty.WhetherEnum;
 
 import java.util.List;
@@ -8,10 +9,11 @@ import java.util.List;
 /**
  * Created by fuguolei
  */
-public class SysUser extends BaseDomain {
+public class UsrUser extends BaseDomain {
 
     private static final long serialVersionUID = -427838794924380991L;
-    
+
+    private String head;
     private String name;
     private String account;
     private String password;
@@ -66,5 +68,13 @@ public class SysUser extends BaseDomain {
 
     public void setRepeatPassword(WhetherEnum repeatPassword) {
         this.repeatPassword = repeatPassword;
+    }
+
+    public String getHead() {
+        return head;
+    }
+
+    public void setHead(String head) {
+        this.head = head;
     }
 }

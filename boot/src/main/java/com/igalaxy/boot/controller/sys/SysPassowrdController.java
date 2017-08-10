@@ -2,7 +2,7 @@ package com.igalaxy.boot.controller.sys;
 
 import com.igalaxy.boot.controller.base.BaseController;
 import com.igalaxy.boot.domain.dto.BaseResult;
-import com.igalaxy.boot.service.sys.SysUserService;
+import com.igalaxy.boot.service.usr.UsrUserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 public class SysPassowrdController extends BaseController {
 
     @Resource
-    SysUserService sysUserService;
+    UsrUserService usrUserService;
 
     @RequestMapping("/index.html")
     public String resetPassword() {
@@ -30,7 +30,7 @@ public class SysPassowrdController extends BaseController {
     @RequestMapping(value = "/resetPassword", method = RequestMethod.POST)
     @ResponseBody
     public Object resetPassword(String oldPassword, String newPassword, HttpServletResponse response) {
-        BaseResult result = sysUserService.resetMyPassword(oldPassword, newPassword);
+        BaseResult result = usrUserService.resetMyPassword(oldPassword, newPassword);
         writeLog(result, "重置密码");
         return writeResult(response, result);
     }

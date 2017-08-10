@@ -52,7 +52,7 @@ public class KaptchaController {
 
         // store the text in the session
         session.setAttribute(Constants.KAPTCHA_SESSION_KEY, capText);
-        logger.debug("capText:{}", capText);
+        logger.debug("capText1:{}", capText);
         // create the image with the text
         BufferedImage bi = captchaProducer.createImage(capText);
         ServletOutputStream out = response.getOutputStream();

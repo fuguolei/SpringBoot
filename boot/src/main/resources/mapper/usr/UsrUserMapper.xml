@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.igalaxy.boot.mapper.sys.SysUserMapper">
+<mapper namespace="com.igalaxy.boot.mapper.usr.UsrUserMapper">
 
     <select id="getUserByAccount" parameterType="string" resultMap="allMap">
         select * from tb_sys_user t
@@ -23,7 +23,7 @@
         where id = #{id}
     </update>
 
-    <resultMap id="allMap" type="SysUser">
+    <resultMap id="allMap" type="UsrUser">
         <id column="id" property="id"/>
         <collection property="roles" column="id" ofType="SysRole" select="selecAllRole"/>
     </resultMap>
@@ -56,7 +56,7 @@
         where t.roleId = #{id} and t.disabled = 0
     </select>
 
-    <select id="queryPage" parameterType="map" resultType="SysUser">
+    <select id="queryPage" parameterType="map" resultType="UsrUser">
         SELECT t.* FROM tb_sys_user t
         WHERE t.disabled = 0
         <if test="searchUserAccount != null">
@@ -78,7 +78,7 @@
         </if>
     </select>
 
-    <insert id="save" parameterType="SysUser">
+    <insert id="save" parameterType="UsrUser">
         insert into tb_sys_user
         (`name`, account, password,createUser, createTime, updateUser, updateTime, disabled,
         repeatPassword)
@@ -91,7 +91,7 @@
     </insert>
 
 
-    <update id="update" parameterType="SysUser">
+    <update id="update" parameterType="UsrUser">
         update tb_sys_user t
         <trim prefix="set" suffixOverrides=",">
             t.updateTime = now(),
@@ -103,7 +103,7 @@
     </update>
 
 
-    <update id="delete" parameterType="SysUser">
+    <update id="delete" parameterType="UsrUser">
         update tb_sys_user t
         set t.updateTime = now(),
         t.updateUser = #{updateUser},
@@ -111,7 +111,7 @@
         where t.id = #{id}
     </update>
 
-    <update id="setPassword" parameterType="SysUser">
+    <update id="setPassword" parameterType="UsrUser">
         update tb_sys_user t
         <trim prefix="set" suffixOverrides=",">
             t.updateTime = now(),

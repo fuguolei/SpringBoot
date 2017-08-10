@@ -1,11 +1,11 @@
-package com.igalaxy.boot.controller.sys;
+package com.igalaxy.boot.controller.usr;
 
 import com.igalaxy.boot.controller.base.BaseController;
 import com.igalaxy.boot.domain.dto.BaseResult;
-import com.igalaxy.boot.domain.sys.SysUser;
+import com.igalaxy.boot.domain.usr.UsrUser;
 import com.igalaxy.boot.enums.SysProperty.WhetherEnum;
 import com.igalaxy.boot.service.base.BaseService;
-import com.igalaxy.boot.service.sys.SysUserService;
+import com.igalaxy.boot.service.usr.UsrUserService;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,18 +16,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 /**
- * Created by jinlong on 2017/2/6.
+ * Created by fuguolei on 2017/2/6.
  */
 @Controller
-@RequestMapping("/admin/sys/user")
-public class SysUserController extends BaseController {
+@RequestMapping("/usr/user")
+public class UsrUserController extends BaseController {
 
     @Resource
-    SysUserService sysUserService;
+    UsrUserService usrUserService;
 
     @Override
     protected BaseService getService() {
-        return sysUserService;
+        return usrUserService;
     }
 
     @Override
@@ -44,31 +44,31 @@ public class SysUserController extends BaseController {
     }
 
     @RequestMapping(value = "/add.json", method = RequestMethod.POST)
-    public String addUser(SysUser sysUser, HttpServletResponse response) {
-        if (sysUser.getAccount().indexOf(" ") >= 0)
+    public String addUser(UsrUser usrUser, HttpServletResponse response) {
+        if (usrUser.getAccount().indexOf(" ") >= 0)
             return writeResult(response, new BaseResult(false, "账号包含空格"));
-        SysUser exUser = sysUserService.getUserByAccount(sysUser.getAccount());
+        UsrUser exUser = usrUserService.getUserByAccount(usrUser.getAccount());
         if (exUser != null) {
             return writeResult(response, new BaseResult(false, "账号重复"));
         }
 //        sysUser.setPassword("12345678");
-        sysUser.setRepeatPassword(WhetherEnum.No);
-        BaseResult result = sysUserService.save(sysUser);
-        writeLog(result, String.format("添加用户[%s]", sysUser.getName()));
+        usrUser.setRepeatPassword(WhetherEnum.No);
+        BaseResult result = usrUserService.save(usrUser);
+        writeLog(result, String.format("添加用户[%s]", usrUser.getName()));
         return writeResult(response, result);
     }
 
     @RequestMapping(value = "/edit.json", method = RequestMethod.POST)
-    public String updateUser(SysUser sysUser, HttpServletResponse response) {
-        BaseResult result = sysUserService.update(sysUser);
-        writeLog(result, String.format("更新用户[%s]", sysUser.getName()));
+    public String updateUser(UsrUser usrUser, HttpServletResponse response) {
+        BaseResult result = usrUserService.update(usrUser);
+        writeLog(result, String.format("更新用户[%s]", usrUser.getName()));
         return writeResult(response, result);
     }
 
     @RequestMapping(value = "/delete.json", method = RequestMethod.POST)
-    public String deleteUser(SysUser sysUser, HttpServletResponse response) {
-        BaseResult result = sysUserService.delete(sysUser);
-        writeLog(result, String.format("删除用户[%s]", sysUser.getId()));
+    public String deleteUser(UsrUser usrUser, HttpServletResponse response) {
+        BaseResult result = usrUserService.delete(usrUser);
+        writeLog(result, String.format("删除用户[%s]", usrUser.getId()));
         return writeResult(response, result);
     }
 
@@ -76,11 +76,11 @@ public class SysUserController extends BaseController {
      * 未用到 fuguolei
      */
     @RequestMapping(value = "/resetPassword", method = RequestMethod.POST)
-    public String resetPassword(SysUser sysUser, HttpServletResponse response) {
-        sysUser.setPassword("12345678");
-        sysUser.setRepeatPassword(WhetherEnum.Yes);
-        SysUser user = sysUserService.queryById(sysUser.getId());
-        BaseResult result = sysUserService.setPassword(sysUser);
+    public String resetPassword(UsrUser usrUser, HttpServletResponse response) {
+        usrUser.setPassword("12345678");
+        usrUser.setRepeatPassword(WhetherEnum.Yes);
+        UsrUser user = usrUserService.queryById(usrUser.getId());
+        BaseResult result = usrUserService.setPassword(usrUser);
         writeLog(result, String.format("重置用户[%s]密码", user.getName()));
         return writeResult(response, result);
     }

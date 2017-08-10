@@ -5,15 +5,12 @@ import com.google.gson.reflect.TypeToken;
 import com.igalaxy.boot.domain.BaseDomain;
 import com.igalaxy.boot.domain.dto.BaseResult;
 import com.igalaxy.boot.domain.dto.ListViewPage;
-import com.igalaxy.boot.domain.sys.SysUser;
 import com.igalaxy.boot.service.base.BaseService;
 import com.igalaxy.boot.util.DateUtils;
 import com.igalaxy.boot.util.HttpUtil;
+import com.igalaxy.boot.util.SessionUtils;
 import com.igalaxy.boot.util.StringUtils;
 import com.igalaxy.boot.util.json.AppJsonUtils;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.session.Session;
-import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,22 +32,8 @@ import java.util.Map;
 public class BaseController {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    protected Session getSession() {
-        Subject subject = SecurityUtils.getSubject();
-        Session session = subject.getSession();
-        return session;
-    }
-
-    protected SysUser getUser() {
-        Object o = this.getSession().getAttribute("currentUser");
-        if (o == null)
-            return null;
-        logger.debug("currentUser:{}", o);
-        return (SysUser) o;
-    }
-
     protected Long getUserId() {
-        return getUser().getId();
+        return SessionUtils.getUserId();
     }
 
     protected HttpServletRequest getServletRequest() {
@@ -69,7 +52,6 @@ public class BaseController {
         if (service == null)
             return null;
         ListViewPage page = service.queryPageList(getPageParams());
-//        HttpResponseUtil.writeString(response, toJson(page));
         return writeResultOld(response, page);
     }
 

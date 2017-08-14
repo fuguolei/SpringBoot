@@ -10,4 +10,6 @@ import com.igalaxy.boot.service.base.BaseService;
 public interface UsrWechatService extends BaseService<UsrWechat> {
 
     BaseResult oauth(String code);
+
+    UsrWechat queryByUserId(Long userId);
 }

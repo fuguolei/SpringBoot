@@ -9,11 +9,12 @@ import com.igalaxy.boot.service.base.BaseService;
  */
 public interface UsrUserService extends BaseService<UsrUser> {
 
-    public UsrUser getUserByAccount(String account);
+    UsrUser getUserByAccount(String account);
 
-    public BaseResult resetMyPassword(String oldPassword, String newPassword);
+    BaseResult resetMyPassword(String oldPassword, String newPassword);
 
-    public BaseResult<UsrUser> setPassword(UsrUser usrUser);
+    BaseResult<UsrUser> setPassword(UsrUser usrUser);
 
+    UsrUser queryByOpenId(String openId);
 
 }

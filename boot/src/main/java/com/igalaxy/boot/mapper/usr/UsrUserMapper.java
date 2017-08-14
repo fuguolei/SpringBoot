@@ -27,4 +27,6 @@ public interface UsrUserMapper extends BaseMapper<UsrUser> {
     public void resetPassword(Map<String, Object> params);
 
     public void setPassword(UsrUser usrUser);
+
+    UsrUser queryByOpenId(String openId);
 }

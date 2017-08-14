@@ -1,4 +1,4 @@
-package com.igalaxy.boot.controller.base;
+package com.igalaxy.boot.controller.admin.base;
 
 import com.google.code.kaptcha.Constants;
 import com.igalaxy.boot.domain.dto.BaseResult;
@@ -30,7 +30,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/admin")
-public class AdminIndexController extends BaseController {
+public class AdminIndexController extends AdminController {
 
     @Resource
     private SysResourceService sysResourceService;

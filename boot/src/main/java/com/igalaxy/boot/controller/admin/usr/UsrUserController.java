@@ -1,6 +1,6 @@
-package com.igalaxy.boot.controller.usr;
+package com.igalaxy.boot.controller.admin.usr;
 
-import com.igalaxy.boot.controller.base.BaseController;
+import com.igalaxy.boot.controller.admin.base.AdminController;
 import com.igalaxy.boot.domain.dto.BaseResult;
 import com.igalaxy.boot.domain.usr.UsrUser;
 import com.igalaxy.boot.enums.SysProperty.WhetherEnum;
@@ -20,7 +20,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/usr/user")
-public class UsrUserController extends BaseController {
+public class UsrUserController extends AdminController {
 
     @Resource
     UsrUserService usrUserService;

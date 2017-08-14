@@ -55,4 +55,8 @@
         where t.id = #{id}
     </update>
 
+    <select id="queryByUserId" parameterType="long" resultType="UsrWechat">
+        select * from tb_usr_wechat t
+        where t.disabled = 0 and t.userId = #{userId}
+    </select>
 </mapper>

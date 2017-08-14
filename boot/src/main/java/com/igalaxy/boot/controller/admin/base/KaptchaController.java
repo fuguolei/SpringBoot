@@ -1,4 +1,4 @@
-package com.igalaxy.boot.controller.base;
+package com.igalaxy.boot.controller.admin.base;
 
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;

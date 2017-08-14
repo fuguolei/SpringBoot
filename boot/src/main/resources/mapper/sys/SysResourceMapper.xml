@@ -12,9 +12,8 @@
         where t.disabled = 0
     </select>
 
-
     <select id="selectAllResourceByUserId" parameterType="long" resultType="SysResource">
-        SELECT res.* FROM tb_sys_user u
+        SELECT res.* FROM tb_usr_user u
         INNER JOIN tb_sys_user_role ur
         ON u.`id` = ur.`userId` AND ur.`disabled` = 0
         INNER JOIN tb_sys_role role

@@ -5,18 +5,24 @@
 <mapper namespace="com.igalaxy.boot.mapper.usr.UsrUserMapper">
 
     <select id="getUserByAccount" parameterType="string" resultMap="allMap">
-        select * from tb_sys_user t
-        where t.disabled = 0 and t.account = #{account};
+        select * from tb_usr_user t
+        where t.disabled = 0 and t.account = #{account}
+    </select>
+
+    <select id="queryByOpenId" parameterType="string" resultMap="allMap">
+        select * from tb_usr_user t
+        INNER JOIN tb_usr_wechat w ON t.id = w.userId AND w.disabled = 0
+        where t.disabled = 0 and w.openId = #{openId}
     </select>
 
     <select id="queryById" parameterType="long" resultMap="allMap">
-        select * from tb_sys_user t
+        select * from tb_usr_user t
         where t.disabled = 0 and t.id = #{id}
     </select>
 
 
     <update id="resetPassword" parameterType="map">
-        update tb_sys_user
+        update tb_usr_user
         set updateTime = now(),
         updateUser = #{updateUser},
         password = #{password}
@@ -57,7 +63,7 @@
     </select>
 
     <select id="queryPage" parameterType="map" resultType="UsrUser">
-        SELECT t.* FROM tb_sys_user t
+        SELECT t.* FROM tb_usr_user t
         WHERE t.disabled = 0
         <if test="searchUserAccount != null">
             and t.account like CONCAT('%', #{searchUserAccount},'%')
@@ -71,7 +77,7 @@
 
 
     <select id="queryPageCount" parameterType="map" resultType="int">
-        SELECT COUNT(1) FROM tb_sys_user t
+        SELECT COUNT(1) FROM tb_usr_user t
         WHERE t.disabled = 0
         <if test="txtName != null">
             and t.name like CONCAT('%', #{txtName},'%')
@@ -79,7 +85,7 @@
     </select>
 
     <insert id="save" parameterType="UsrUser">
-        insert into tb_sys_user
+        insert into tb_usr_user
         (`name`, account, password,createUser, createTime, updateUser, updateTime, disabled,
         repeatPassword)
         values
@@ -92,7 +98,7 @@
 
 
     <update id="update" parameterType="UsrUser">
-        update tb_sys_user t
+        update tb_usr_user t
         <trim prefix="set" suffixOverrides=",">
             t.updateTime = now(),
             t.updateUser = #{updateUser},
@@ -104,7 +110,7 @@
 
 
     <update id="delete" parameterType="UsrUser">
-        update tb_sys_user t
+        update tb_usr_user t
         set t.updateTime = now(),
         t.updateUser = #{updateUser},
         t.disabled = 1
@@ -112,7 +118,7 @@
     </update>
 
     <update id="setPassword" parameterType="UsrUser">
-        update tb_sys_user t
+        update tb_usr_user t
         <trim prefix="set" suffixOverrides=",">
             t.updateTime = now(),
             t.updateUser = #{updateUser},
@@ -123,7 +129,7 @@
     </update>
 
     <update id="replaceUser" parameterType="map">
-        update tb_sys_user t
+        update tb_usr_user t
         <trim prefix="set" suffixOverrides=",">
             t.updateTime = now(),
             t.updateUser = #{updateUser},

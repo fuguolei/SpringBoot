@@ -33,7 +33,7 @@
         t.`name` userName,
         t.`account`
         FROM
-        tb_sys_user t
+        tb_usr_user t
         LEFT JOIN v_sys_user_role r
         ON t.`id` = r.`userId`
         AND r.`disabled` = 0

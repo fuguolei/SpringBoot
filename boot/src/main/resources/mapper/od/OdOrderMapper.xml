@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.igalaxy.boot.mapper.od.OdOrderMapper">
+
+    <select id="queryById" parameterType="long" resultType="OdOrder">
+        select * from tb_od_order t
+        where t.disabled = 0 and t.id = #{id}
+    </select>
+
+    <insert id="save" parameterType="OdOrder">
+        insert into tb_od_order (
+        `number`,
+        `sum`,
+        `name`,
+        description,
+        userId,
+        payWay,
+        status,
+        createUser,
+        createTime,
+        updateUser,
+        updateTime,
+        disabled
+        )
+        values
+        (#{number},
+        #{sum},
+        #{name},
+        #{description},
+        #{userId},
+        #{payWay},
+        #{status},
+        #{createUser},
+        now(),
+        #{updateUser},
+        now(),
+        0)
+        <selectKey resultType="long" keyProperty="id">
+            select LAST_INSERT_ID() as id
+        </selectKey>
+    </insert>
+
+    <update id="update" parameterType="OdOrder">
+        update tb_od_order t
+        SET
+        <if test="payWay != null">t.payWay = #{payWay},</if>
+        <if test="status != null">t.status = #{status},</if>
+        t.updateUser = #{updateUser},
+        t.updateTime = now()
+        where t.id = #{id}
+    </update>
+
+    <update id="updateOdOrderByNumber" parameterType="OdOrder">
+        update tb_od_order t
+        SET
+        <if test="payWay != null">t.payWay = #{payWay},</if>
+        <if test="status != null">t.status = #{status},</if>
+        t.updateUser = #{updateUser},
+        t.updateTime = now()
+        where t.number = #{number}
+    </update>
+
+
+    <update id="delete" parameterType="OdOrder">
+        update tb_od_order t
+        set t.updateTime = now(),
+        t.updateUser = #{updateUser},
+        t.disabled = 1
+        where t.id = #{id}
+    </update>
+
+</mapper>

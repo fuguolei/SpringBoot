@@ -1,6 +1,6 @@
-package com.igalaxy.boot.controller.sys;
+package com.igalaxy.boot.controller.admin.sys;
 
-import com.igalaxy.boot.controller.base.BaseController;
+import com.igalaxy.boot.controller.admin.base.AdminController;
 import com.igalaxy.boot.domain.dto.BaseResult;
 import com.igalaxy.boot.service.usr.UsrUserService;
 import org.springframework.stereotype.Controller;
@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Controller
 @RequestMapping("/admin/sys/password")
-public class SysPassowrdController extends BaseController {
+public class SysPassowrdController extends AdminController {
 
     @Resource
     UsrUserService usrUserService;

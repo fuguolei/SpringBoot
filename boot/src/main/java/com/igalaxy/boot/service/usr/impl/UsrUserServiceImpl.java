@@ -48,6 +48,11 @@ public class UsrUserServiceImpl extends BaseServiceImpl<UsrUser> implements UsrU
 
 
     @Override
+    public UsrUser queryByOpenId(String openId) {
+        return usrUserMapper.queryByOpenId(openId);
+    }
+
+    @Override
     public BaseMapper<UsrUser> getMapper() {
         return usrUserMapper;
     }

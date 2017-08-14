@@ -1,6 +1,6 @@
-package com.igalaxy.boot.controller.sys;
+package com.igalaxy.boot.controller.admin.sys;
 
-import com.igalaxy.boot.controller.base.BaseController;
+import com.igalaxy.boot.controller.admin.base.AdminController;
 import com.igalaxy.boot.domain.dto.BaseResult;
 import com.igalaxy.boot.domain.sys.SysRole;
 import com.igalaxy.boot.service.base.BaseService;
@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Controller
 @RequestMapping("/admin/sys/role")
-public class SysRoleController extends BaseController {
+public class SysRoleController extends AdminController {
 
     @Autowired
     SysRoleService sysRoleService;

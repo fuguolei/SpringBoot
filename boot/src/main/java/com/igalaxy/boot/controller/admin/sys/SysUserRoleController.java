@@ -1,6 +1,6 @@
-package com.igalaxy.boot.controller.sys;
+package com.igalaxy.boot.controller.admin.sys;
 
-import com.igalaxy.boot.controller.base.BaseController;
+import com.igalaxy.boot.controller.admin.base.AdminController;
 import com.igalaxy.boot.domain.dto.BaseResult;
 import com.igalaxy.boot.domain.sys.SysRole;
 import com.igalaxy.boot.domain.usr.UsrUser;
@@ -25,7 +25,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/admin/sys/role/user")
-public class SysUserRoleController extends BaseController {
+public class SysUserRoleController extends AdminController {
 
     @Resource
     SysUserRoleService sysUserRoleService;

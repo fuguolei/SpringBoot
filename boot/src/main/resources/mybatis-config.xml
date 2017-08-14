@@ -22,6 +22,11 @@
                      handler="com.igalaxy.boot.enums.SysProperty$StgFilePrefixEnumValueHandler"/>
         <typeHandler javaType="com.igalaxy.boot.enums.SysProperty$StgFileStatusEnum"
                      handler="com.igalaxy.boot.enums.SysProperty$StgFileStatusEnumValueHandler"/>
+
+        <typeHandler javaType="com.igalaxy.boot.enums.OdProperty$OdOrderStatusEnum"
+                     handler="com.igalaxy.boot.enums.OdProperty$OdOrderStatusEnumValueHandler"/>
+        <typeHandler javaType="com.igalaxy.boot.enums.OdProperty$OdPayWayEnum"
+                     handler="com.igalaxy.boot.enums.OdProperty$OdPayWayEnumValueHandler"/>
     </typeHandlers>
     <mappers>
         <!-- 公共配置 -->

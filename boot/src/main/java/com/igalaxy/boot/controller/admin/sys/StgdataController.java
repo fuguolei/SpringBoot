@@ -1,6 +1,6 @@
-package com.igalaxy.boot.controller.sys;
+package com.igalaxy.boot.controller.admin.sys;
 
-import com.igalaxy.boot.controller.base.BaseController;
+import com.igalaxy.boot.controller.admin.base.AdminController;
 import com.igalaxy.boot.domain.dto.BaseResult;
 import com.igalaxy.boot.domain.sys.SysStgData;
 import com.igalaxy.boot.enums.SysProperty;
@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Controller
 @RequestMapping("/sys/stgdata")
-public class SysStgDataController extends BaseController {
+public class StgdataController extends AdminController {
 
     @Autowired
     SysStgDataService sysStgDataService;

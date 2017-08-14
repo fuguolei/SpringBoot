@@ -87,17 +87,9 @@ public class ShiroConfiguration {
         return logoutFilter;
     }
 
-    @Bean
-    public UserFilter getAdminFilter() {
-        UserFilter filter = new UserFilter();
-        filter.setLoginUrl("/admin/login");
-        return filter;
-    }
-
-    @Bean
     public UserFilter getUserFilter() {
         UserFilter filter = new UserFilter();
-        filter.setLoginUrl("/login");
+        filter.setLoginUrl("/usr/wechat/index.html");
         return filter;
     }
 
@@ -113,15 +105,16 @@ public class ShiroConfiguration {
 //        filter.setLoginUrl("/admin/login");
 //        filter.setPasswordParam("j_password");
 //        filter.setUsernameParam("j_username");
-//        filterMap.put("adminAuthc", getAdminFilter());
-//        filterMap.put("userAuthc", getUserFilter());
+        filterMap.put("userAuthc", getUserFilter());
         filterMap.put("logout", getLogoutFilter());
         shiroFilterFactoryBean.setFilters(filterMap);
         filterChainDefinitionMap.put("/admin/login", "anon");
         filterChainDefinitionMap.put("/admin/login.json", "anon");
+        filterChainDefinitionMap.put("/usr/wechat/**", "anon");
+        filterChainDefinitionMap.put("/pay/wechat-notify", "anon");
         filterChainDefinitionMap.put("/admin/logout.html", "logout");
         filterChainDefinitionMap.put("/admin/**", "authc");
-//        filterChainDefinitionMap.put("/user/**", "userAuthc");
+        filterChainDefinitionMap.put("/**", "userAuthc");
         List<SysResource> resources = getSysResourceService().getAll();
         filterChainDefinitionMap.put("/admin/index.html", "perms[user:index]");
         for (SysResource resource : resources) {

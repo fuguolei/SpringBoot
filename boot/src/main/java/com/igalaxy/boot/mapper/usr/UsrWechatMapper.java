@@ -9,5 +9,5 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface UsrWechatMapper extends BaseMapper<UsrWechat> {
-
+    UsrWechat queryByUserId(Long userId);
 }

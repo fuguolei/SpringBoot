@@ -10,6 +10,10 @@ import com.igalaxy.boot.service.base.BaseServiceImpl;
 import com.igalaxy.boot.service.usr.UsrUserService;
 import com.igalaxy.boot.service.usr.UsrWechatService;
 import com.igalaxy.boot.util.HttpClientUtils;
+import com.igalaxy.boot.util.SessionUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,32 +39,52 @@ public class UsrWeChatServiceImpl extends BaseServiceImpl<UsrWechat> implements 
         return null;
     }
 
+
+    @Override
+    public UsrWechat queryByUserId(Long userId) {
+        return usrWechatMapper.queryByUserId(userId);
+    }
+
     public BaseResult oauth(String code) {
         WeiXinTockenResponse tocken = getAccessToken(code);
-        UsrWechat usrWechat = queryByOpenId(tocken.openid);
-        if (usrWechat == null) {
+        UsrUser usrUser = usrUserService.queryByOpenId(tocken.openid);
+        if (usrUser == null) {
             WeiXinUserInfoResponse userInfo = getUserInfo(tocken);
-            UsrUser usrUser = new UsrUser();
+            usrUser = new UsrUser();
             usrUser.setName(userInfo.nickname);
             usrUser.setHead(userInfo.headimgurl);
-            BaseResult<UsrUser> result = usrUserService.save(usrUser);
+            usrUser.setAccount(userInfo.openid);
+            usrUser.setPassword("12341fdsfqeur1234");
+            BaseResult result = usrUserService.save(usrUser);
             if (!result.isSuccess())
                 return result;
-            usrWechat = new UsrWechat();
-            usrWechat.setUserId(result.getData().getId());
+            usrUser = (UsrUser) result.getData();
+            UsrWechat usrWechat = new UsrWechat();
+            usrWechat.setUserId(usrUser.getId());
             usrWechat.setOpenId(userInfo.openid);
             usrWechat.setUserInfo(userInfo.response);
-            return save(usrWechat);
+            result = save(usrWechat);
+            if (!result.isSuccess())
+                return result;
         }
-
+        Subject subject = SecurityUtils.getSubject();
+        UsernamePasswordToken token = new UsernamePasswordToken(usrUser.getAccount(), usrUser.getPassword());
+        try {
+            subject.login(token);//验证角色和权限
+            SessionUtils.setUserId(usrUser.getId());
+        } catch (Exception e) {
+            return new BaseResult(false, "认证失败");
+        }
         return new BaseResult(true);
     }
 
     private WeiXinTockenResponse getAccessToken(String code) {
         String accessTockenUrl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid={appid}&secret={secret}&code={code}&grant_type=authorization_code";
-        String atResponse = HttpClientUtils.doGet(accessTockenUrl, "wx855e27a3d08ed53f", "407960bf428155b7209bc3a368bde733", code);
+        String atResponse = HttpClientUtils.doGet(accessTockenUrl, "wx855e27a3d08ed53f", "5adfa8174ef10fea49ef1e831e2ffa9e", code);
         //atResponse = "{'access_token':'GG0NdHoXEY_0P2im3POviwT6bUb9F8q46OCF77v5bVsaOxj3XAGbyBFGuCPgu-ugYX-aNbYS5Ty5eDSp3Fzm6E9zyLEnLEnONFp9D9Y9hGI','expires_in':7200,'refresh_token':'wswo5OdM6mD80ROVYsQWNU7b6vYuddzc250oxLE0XlBsWPHP-EGy5YhVpRnRdKX4eLKyP5NiU0SWp50EecuZDUgITyXbH0HEQfrt_NrBASA','openid':'oBXGawUWjZtPflKuUYkEIJS8QktM','scope':'snsapi_userinfo','unionid':'oWmjHwcSwJ4aUXFD71xzYxsk3uIU'}";
+        logger.debug("atResponse:{}", atResponse);
         WeiXinTockenResponse wxr = gson.fromJson(atResponse, WeiXinTockenResponse.class);
+        logger.debug("wxr:{}", wxr);
         if (wxr.errcode != null) {
             return null;
         }
@@ -69,7 +93,7 @@ public class UsrWeChatServiceImpl extends BaseServiceImpl<UsrWechat> implements 
 
     private WeiXinUserInfoResponse getUserInfo(WeiXinTockenResponse wxt) {
         String userInfoUrl = "https://api.weixin.qq.com/sns/userinfo?access_token={accenToken}&openid={openId}";
-        String userInfoResponse = HttpClientUtils.doGet(userInfoUrl, wxt.access_token, "407960bf428155b7209bc3a368bde733", wxt.openid);
+        String userInfoResponse = HttpClientUtils.doGet(userInfoUrl, wxt.access_token, "5adfa8174ef10fea49ef1e831e2ffa9e", wxt.openid);
         //userInfoResponse = "{'openid':'oBXGawUWjZtPflKuUYkEIJS8QktM','nickname':'连京帅','sex':1,'language':'zh_CN','city':'Zhengzhou','province':'Henan','country':'CN','headimgurl':'','privilege':[],'unionid':'oWmjHwcSwJ4aUXFD71xzYxsk3uIU'}";
         WeiXinUserInfoResponse weiXinUserInfoResponse = gson.fromJson(userInfoResponse, WeiXinUserInfoResponse.class);
         if (weiXinUserInfoResponse.errcode != null) {

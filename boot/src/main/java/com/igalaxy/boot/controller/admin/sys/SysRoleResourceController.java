@@ -1,6 +1,6 @@
-package com.igalaxy.boot.controller.sys;
+package com.igalaxy.boot.controller.admin.sys;
 
-import com.igalaxy.boot.controller.base.BaseController;
+import com.igalaxy.boot.controller.admin.base.AdminController;
 import com.igalaxy.boot.domain.BaseDomain;
 import com.igalaxy.boot.domain.dto.BaseResult;
 import com.igalaxy.boot.domain.dto.EasyUITree;
@@ -22,7 +22,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/admin/sys/role/res")
-public class SysRoleResourceController extends BaseController {
+public class SysRoleResourceController extends AdminController {
 
     @Autowired
     SysRoleService sysRoleService;

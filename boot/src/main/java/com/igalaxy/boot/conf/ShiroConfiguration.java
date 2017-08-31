@@ -114,7 +114,7 @@ public class ShiroConfiguration {
         filterChainDefinitionMap.put("/pay/wechat-notify", "anon");
         filterChainDefinitionMap.put("/admin/logout.html", "logout");
         filterChainDefinitionMap.put("/admin/**", "authc");
-        filterChainDefinitionMap.put("/**", "userAuthc");
+//        filterChainDefinitionMap.put("/**", "userAuthc");
         List<SysResource> resources = getSysResourceService().getAll();
         filterChainDefinitionMap.put("/admin/index.html", "perms[user:index]");
         for (SysResource resource : resources) {

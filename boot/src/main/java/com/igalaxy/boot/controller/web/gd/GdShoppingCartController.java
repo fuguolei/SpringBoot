@@ -3,7 +3,9 @@ package com.igalaxy.boot.controller.web.gd;
 import com.igalaxy.boot.controller.web.WeChatController;
 import com.igalaxy.boot.domain.dto.BaseResult;
 import com.igalaxy.boot.domain.gd.GdShoppingCartSKU;
+import com.igalaxy.boot.domain.usr.UsrAddress;
 import com.igalaxy.boot.service.gd.GdShoppingCartService;
+import com.igalaxy.boot.service.usr.UsrAddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +25,8 @@ public class GdShoppingCartController extends WeChatController {
     @Autowired
     GdShoppingCartService gdShoppingCartService;
 
+    @Autowired
+    UsrAddressService usrAddressService;
 
     @RequestMapping("add.json")
     public String add(Long skuId, Integer count, HttpServletResponse response) {
@@ -77,6 +81,8 @@ public class GdShoppingCartController extends WeChatController {
             skuIdList.add(Long.parseLong(strIds[i]));
         List<GdShoppingCartSKU> list = gdShoppingCartService.queryList(skuIdList);
         request.setAttribute("list", list);
+        UsrAddress address = usrAddressService.queryDefaultAddress();
+        request.setAttribute("address", address);
         return "web/gd/order_confirm";
     }
 }

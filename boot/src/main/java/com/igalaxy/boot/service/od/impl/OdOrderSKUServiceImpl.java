@@ -1,10 +1,12 @@
 package com.igalaxy.boot.service.od.impl;
 
 import com.igalaxy.boot.domain.dto.BaseResult;
+import com.igalaxy.boot.domain.gd.GdSKU;
 import com.igalaxy.boot.domain.od.OdOrderSKU;
 import com.igalaxy.boot.mapper.BaseMapper;
 import com.igalaxy.boot.mapper.od.OdOrderSKUMapper;
 import com.igalaxy.boot.service.base.BaseServiceImpl;
+import com.igalaxy.boot.service.gd.GdSKUService;
 import com.igalaxy.boot.service.od.OdOrderSKUService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,9 @@ public class OdOrderSKUServiceImpl extends BaseServiceImpl<OdOrderSKU> implement
 
     @Autowired
     OdOrderSKUMapper odOrderSKUMapper;
+
+    @Autowired
+    GdSKUService gdSKUService;
 
     @Override
     public BaseMapper<OdOrderSKU> getMapper() {
@@ -38,6 +43,15 @@ public class OdOrderSKUServiceImpl extends BaseServiceImpl<OdOrderSKU> implement
 
     @Override
     public List<OdOrderSKU> queryListByOrderId(Long orderId) {
-        return odOrderSKUMapper.queryListByOrderId(orderId);
+        List<OdOrderSKU> list = odOrderSKUMapper.queryListByOrderId(orderId);
+        if (list != null)
+            for (OdOrderSKU odOrderSKU : list) {
+                GdSKU sku = gdSKUService.queryById(odOrderSKU.getSkuId());
+                if (sku != null) {
+                    odOrderSKU.setName(sku.getName());
+                    odOrderSKU.setPicture(sku.getPicture());
+                }
+            }
+        return list;
     }
 }

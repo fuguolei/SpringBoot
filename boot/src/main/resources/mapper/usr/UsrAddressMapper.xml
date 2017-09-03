@@ -53,4 +53,11 @@
         where t.disabled = 0 and t.userId = #{userId}
     </select>
 
+    <select id="queryMyNewOne" parameterType="long" resultType="UsrAddress">
+        select * from tb_usr_address t
+        where t.disabled = 0 and t.userId = #{userId}
+        ORDER BY t.updateTime DESC
+        limit 0,1
+    </select>
+
 </mapper>

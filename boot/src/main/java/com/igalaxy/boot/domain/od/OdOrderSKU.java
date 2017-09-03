@@ -12,6 +12,10 @@ public class OdOrderSKU extends BaseDomain {
     private Double price;
     private Integer count;
 
+    //
+    private String name;
+    private String picture;
+
     public Long getOrderId() {
         return orderId;
     }
@@ -48,5 +52,21 @@ public class OdOrderSKU extends BaseDomain {
         if (price == null || count == null)
             return 0;
         return price * count;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 }

@@ -20,7 +20,6 @@
         where t.disabled = 0 and t.id = #{id}
     </select>
 
-
     <update id="resetPassword" parameterType="map">
         update tb_usr_user
         set updateTime = now(),
@@ -75,7 +74,6 @@
         <include refid="Pager.mysqlPage"/>
     </select>
 
-
     <select id="queryPageCount" parameterType="map" resultType="int">
         SELECT COUNT(1) FROM tb_usr_user t
         WHERE t.disabled = 0
@@ -95,7 +93,6 @@
             select LAST_INSERT_ID() as id
         </selectKey>
     </insert>
-
 
     <update id="update" parameterType="UsrUser">
         update tb_usr_user t

@@ -75,6 +75,7 @@
 
     <select id="queryListByUserId" parameterType="long" resultType="GdShoppingCartSKU">
         SELECT
+        s.picture,
         s.name,
         s.price,
         <include refid="AllField"/>
@@ -94,6 +95,7 @@
 
     <select id="queryListByUserIdSKUIds" parameterType="long" resultType="GdShoppingCartSKU">
         SELECT
+        s.picture,
         s.name,
         s.price,
         <include refid="AllField"/>

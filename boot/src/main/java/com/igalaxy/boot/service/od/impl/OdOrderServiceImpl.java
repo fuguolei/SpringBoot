@@ -65,6 +65,7 @@ public class OdOrderServiceImpl extends BaseServiceImpl<OdOrder> implements OdOr
         OdOrder odOrder = new OdOrder();
         odOrder.setNumber(String.valueOf(System.currentTimeMillis()));
         odOrder.setUserId(getUserId());
+        odOrder.setName(description);
         odOrder.setDescription(description);
         odOrder.setSum(sum);
         odOrder.setStatus(Unpaid);

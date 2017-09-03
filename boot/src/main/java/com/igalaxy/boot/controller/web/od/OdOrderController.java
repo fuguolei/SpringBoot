@@ -59,7 +59,7 @@ public class OdOrderController extends WeChatController {
 
         Map<String, Object> wchatParams = getWchatParams(request);
         wchatParams.put("order", odOrderDetail);
-        return new ModelAndView("web/od/order/index", wchatParams);
+        return new ModelAndView("web/od/order/detail", wchatParams);
     }
 
     @RequestMapping("/submit.json")

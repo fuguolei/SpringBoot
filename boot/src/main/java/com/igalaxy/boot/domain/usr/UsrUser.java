@@ -19,6 +19,7 @@ public class UsrUser extends BaseDomain {
     private String password;
     private WhetherEnum repeatPassword;
     private String lastLoginIP;
+    private Long defaultAddress;
     //
     private List<SysRole> roles;
 
@@ -76,5 +77,13 @@ public class UsrUser extends BaseDomain {
 
     public void setHead(String head) {
         this.head = head;
+    }
+
+    public Long getDefaultAddress() {
+        return defaultAddress;
+    }
+
+    public void setDefaultAddress(Long defaultAddress) {
+        this.defaultAddress = defaultAddress;
     }
 }

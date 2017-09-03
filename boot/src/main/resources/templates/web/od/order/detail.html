@@ -47,15 +47,18 @@
     </script>
 </head>
 <body>
-<dev th:each="shopping:${list}">
-    <input type="hidden" th:value="|${shopping.skuId},${shopping.count}|"/>
+<p th:text="${order.number}"></p>
+<dev th:each="sku:${order.skus}">
+    <input type="hidden" th:value="|${sku.skuId},${sku.count}|"/>
     <!--th:text="'商品编号:'+${shopping.skuId}"></>-->
-    <p th:text="|商品名称:${shopping.name}|"></p>
-    <p th:text="|商品单价:${shopping.price}|"></p>
-    <p th:text="|数量:${shopping.count}|"></p>
+    <img th:src="${sku.picture}" width="100" height="100"/>
+    <p th:text="|商品名称:${sku.name}|"></p>
+    <p th:text="|商品单价:${sku.price}|"></p>
+    <p th:text="|数量:${sku.count}|"></p>
     <p>-----------------------------</p>
 </dev>
 
-<a href="#" onclick="orderPay()">微信支付</a>
+<p th:text="|合计: ${order.sum}元|"></p>
+<a th:if="${order.status.name} == 'Unpaid'" href="#" onclick="orderPay()">微信支付</a>
 </body>
 </html>

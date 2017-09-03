@@ -4,6 +4,7 @@ package com.igalaxy.boot.domain.gd;
  * Created by fuguolei on 2017/9/1.
  */
 public class GdShoppingCartSKU extends GdShoppingCart {
+    private String picture;
     private String name;
     private Double price;
 
@@ -21,5 +22,13 @@ public class GdShoppingCartSKU extends GdShoppingCart {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 }

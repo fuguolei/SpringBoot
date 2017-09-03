@@ -4,6 +4,8 @@ import com.igalaxy.boot.domain.BaseDomain;
 import com.igalaxy.boot.enums.OdProperty.OdOrderStatusEnum;
 import com.igalaxy.boot.enums.OdProperty.OdPayWayEnum;
 
+import static com.igalaxy.boot.enums.OdProperty.OdPayWayEnum.UnKnown;
+
 /**
  * Created by fuguolei
  */
@@ -14,8 +16,7 @@ public class OdOrder extends BaseDomain {
     private String name;
     private String description;
     private Long userId;
-    private OdPayWayEnum payWay;
-
+    private OdPayWayEnum payWay = UnKnown;
     private OdOrderStatusEnum status;
 
     public String getNumber() {

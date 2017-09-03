@@ -27,6 +27,9 @@
                      handler="com.igalaxy.boot.enums.OdProperty$OdOrderStatusEnumValueHandler"/>
         <typeHandler javaType="com.igalaxy.boot.enums.OdProperty$OdPayWayEnum"
                      handler="com.igalaxy.boot.enums.OdProperty$OdPayWayEnumValueHandler"/>
+
+        <typeHandler javaType="com.igalaxy.boot.enums.GdProperty$GdSaleEnum"
+                     handler="com.igalaxy.boot.enums.GdProperty$GdSaleEnumValueHandler"/>
     </typeHandlers>
     <mappers>
         <!-- 公共配置 -->

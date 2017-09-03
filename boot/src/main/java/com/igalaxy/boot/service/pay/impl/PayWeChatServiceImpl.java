@@ -81,6 +81,7 @@ public class PayWeChatServiceImpl implements PayWeChatService {
             return new BaseResult(false, resp.get("err_code_des"));
 
         Map<String, String> jsPay = new HashMap<>();
+        jsPay.put("orderNumber", odOrder.getNumber());
         jsPay.put("appId", resp.get("appid"));
         jsPay.put("timeStamp", String.valueOf(System.currentTimeMillis() / 1000));
         jsPay.put("nonceStr", WXPayUtil.generateNonceStr());

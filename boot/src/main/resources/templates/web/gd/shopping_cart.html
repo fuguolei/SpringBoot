@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>购物车</title>
+    <script type="text/javascript" src="/jquery-easyui/jquery.min.js"></script>
+</head>
+<body>
+<dev th:each="shopping:${list}">
+    <input type="hidden" th:value="${shopping.skuId}"/>
+    <!--th:text="'商品编号:'+${shopping.skuId}"></>-->
+    <p th:text="|商品名称:${shopping.name}|"></p>
+    <p th:text="|商品单价:${shopping.price}|"></p>
+    <p th:text="|数量:${shopping.count}|"></p>
+    <p>-----------------------------</p>
+</dev>
+
+<a href="#" onclick="submit()">提交订单</a>
+<script>
+    function submit() {
+        var params = '';
+        $("input").each(function (index) {
+            if (params)
+                params += ','
+            params += $(this).val();
+        })
+        window.location.href = "/gd/shoppingcart/confirm.html?skuIds=" + params;
+    }
+</script>
+</body>
+</html>

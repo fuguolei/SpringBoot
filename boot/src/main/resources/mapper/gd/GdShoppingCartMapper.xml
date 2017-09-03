@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.igalaxy.boot.mapper.gd.GdShoppingCartMapper">
+
+    <sql id="AllField">
+        t.id,
+        t.userId,
+        t.skuId,
+        t.count,
+        t.createUser,
+        t.createTime,
+        t.updateUser,
+        t.updateTime,
+        t.disabled
+    </sql>
+
+    <insert id="save" parameterType="GdShoppingCart">
+        insert into tb_gd_shopping_cart (
+        userId,
+        skuId,
+        `count`,
+        createUser,
+        createTime,
+        updateUser,
+        updateTime,
+        disabled
+        )
+        values
+        (#{userId},
+        #{skuId},
+        #{count},
+        #{createUser},
+        now(),
+        #{updateUser},
+        now(),
+        0)
+        <selectKey resultType="long" keyProperty="id">
+            select LAST_INSERT_ID() as id
+        </selectKey>
+    </insert>
+
+    <select id="queryById" parameterType="long" resultType="GdShoppingCart">
+        SELECT
+        <include refid="AllField"/>
+        FROM tb_gd_shopping_cart t
+        WHERE t.disabled = 0 AND t.id = #{id}
+    </select>
+
+    <update id="update" parameterType="GdShoppingCart">
+        update tb_gd_shopping_cart t
+        SET
+        t.`count` = #{count},
+        t.updateUser = #{updateUser},
+        t.updateTime = now()
+        where t.id = #{id} AND t.disabled = 0
+    </update>
+
+    <update id="delete" parameterType="GdShoppingCart">
+        update tb_gd_shopping_cart t
+        SET
+        t.disabled = 1,
+        t.updateUser = #{updateUser},
+        t.updateTime = now()
+        where t.id = #{id} AND t.disabled = 0
+    </update>
+
+    <select id="queryByUserIdSKUId" parameterType="map" resultType="GdShoppingCart">
+        SELECT
+        <include refid="AllField"/>
+        FROM tb_gd_shopping_cart t
+        WHERE t.disabled = 0 AND t.userId = #{userId} AND t.skuId = #{skuId}
+    </select>
+
+    <select id="queryListByUserId" parameterType="long" resultType="GdShoppingCartSKU">
+        SELECT
+        s.name,
+        s.price,
+        <include refid="AllField"/>
+        FROM tb_gd_shopping_cart t
+        JOIN tb_gd_sku s ON t.skuId = s.id
+        WHERE t.disabled = 0 AND t.userId = #{userId}
+    </select>
+
+    <update id="deleteByUserId" parameterType="long">
+        update tb_gd_shopping_cart t
+        SET
+        t.disabled = 1,
+        t.updateUser = #{updateUser},
+        t.updateTime = now()
+        where t.userId = #{userId} AND t.disabled = 0
+    </update>
+
+    <select id="queryListByUserIdSKUIds" parameterType="long" resultType="GdShoppingCartSKU">
+        SELECT
+        s.name,
+        s.price,
+        <include refid="AllField"/>
+        FROM tb_gd_shopping_cart t
+        JOIN tb_gd_sku s ON t.skuId = s.id
+        WHERE t.disabled = 0 AND t.userId = #{userId} AND t.skuId IN
+        (
+        <foreach collection="skuIds" item="item" index="index" separator=",">
+            #{item}
+        </foreach>
+        )
+    </select>
+
+</mapper>

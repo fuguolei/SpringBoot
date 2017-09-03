@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.igalaxy.boot.mapper.od.OdOrderSKUMapper">
+
+    <select id="queryById" parameterType="long" resultType="OdOrderSKU">
+        select * from tb_od_order_sku t
+        where t.disabled = 0 and t.id = #{id}
+    </select>
+
+    <insert id="save" parameterType="OdOrderSKU">
+        insert into tb_od_order_sku (
+        orderId,
+        skuId,
+        price,
+        `count`,
+        createUser,
+        createTime,
+        updateUser,
+        updateTime,
+        disabled
+        )
+        values
+        (#{orderId},
+        #{skuId},
+        #{price},
+        #{count},
+        #{createUser},
+        now(),
+        #{updateUser},
+        now(),
+        0)
+        <selectKey resultType="long" keyProperty="id">
+            select LAST_INSERT_ID() as id
+        </selectKey>
+    </insert>
+
+    <insert id="batchSave" parameterType="java.util.List">
+        INSERT INTO tb_od_order_sku (
+        orderId,
+        skuId,
+        price,
+        `count`,
+        createUser,
+        createTime,
+        updateUser,
+        updateTime,
+        disabled
+        )
+        VALUE
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.orderId},
+            #{item.skuId},
+            #{item.price},
+            #{item.count},
+            #{item.createUser},
+            now(),
+            #{item.updateUser},
+            now(),
+            0
+            )
+        </foreach>
+    </insert>
+    <update id="update" parameterType="OdOrderSKU">
+        update tb_od_order_sku t
+        <if test="count != null">t.name = #{count},</if>
+        t.updateUser = #{updateUser},
+        t.updateTime = now()
+        where t.id = #{id}
+    </update>
+
+    <update id="delete" parameterType="OdOrderSKU">
+        update tb_od_order_sku t
+        set t.updateTime = now(),
+        t.updateUser = #{updateUser},
+        t.disabled = 1
+        where t.id = #{id}
+    </update>
+
+    <select id="querySumByOrderId" resultType="float" parameterType="long">
+      SELECT COUNT(t.price*t.count)
+      FROM tb_od_order_sku t
+      WHERE t.orderId = #{orderId} AND t.disabled = 0
+    </select>
+
+    <select id="queryListByOrderId" parameterType="long" resultType="OdOrderSKU">
+        select * from tb_od_order_sku t
+        where t.disabled = 0 and t.orderId = #{orderId}
+    </select>
+</mapper>

@@ -4,16 +4,21 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.igalaxy.boot.mapper.gd.GdSKUMapper">
 
+    <select id="queryById" parameterType="long" resultType="GdSKU">
+        SELECT * FROM tb_gd_sku t
+        WHERE t.disabled = 0 AND t.id = #{id}
+    </select>
+
     <select id="queryFirstByProductId" parameterType="long" resultType="GdSKU">
-        select * from tb_gd_sku t
-        where t.disabled = 0 and t.productId = #{productId}
-        order by t.sort
+        SELECT * FROM tb_gd_sku t
+        WHERE t.disabled = 0 AND t.productId = #{productId} AND t.sale = 1
+        ORDER BY t.sort
         limit 0,1
     </select>
 
     <select id="queryByNumber" parameterType="string" resultType="GdSKU">
-        select * from tb_gd_sku t
-        where t.disabled = 0 and t.number = #{number}
+        SELECT * FROM tb_gd_sku t
+        WHERE t.disabled = 0 AND t.number = #{number} AND t.sale = 1
     </select>
 
 </mapper>

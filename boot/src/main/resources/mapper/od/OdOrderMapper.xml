@@ -4,8 +4,25 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.igalaxy.boot.mapper.od.OdOrderMapper">
 
+    <sql id="AllField">
+        t.id,
+        t.`number`,
+        t.`sum`,
+        t.`name`,
+        t.description,
+        t.userId,
+        t.payWay,
+        t.status,
+        t.createUser,
+        t.createTime,
+        t.updateUser,
+        t.updateTime,
+        t.disabled
+    </sql>
     <select id="queryById" parameterType="long" resultType="OdOrder">
-        select * from tb_od_order t
+        select
+        <include refid="AllField"/>
+        from tb_od_order t
         where t.disabled = 0 and t.id = #{id}
     </select>
 
@@ -62,6 +79,12 @@
         where t.number = #{number}
     </update>
 
+    <select id="queryByNumber" parameterType="String" resultType="OdOrderDetail">
+        select
+        <include refid="AllField"/>
+        from tb_od_order t
+        where t.disabled = 0 and t.number = #{number}
+    </select>
 
     <update id="delete" parameterType="OdOrder">
         update tb_od_order t
@@ -71,4 +94,31 @@
         where t.id = #{id}
     </update>
 
+    <select id="queryPage" parameterType="map" resultType="OdOrderDetail">
+        select
+        <include refid="AllField"/>
+        from tb_od_order t
+        where t.disabled = 0
+        <if test="status != null">
+            and t.status = #{status}
+        </if>
+        <if test="userId != null">
+            and t.userId = #{userId}
+        </if>
+        order by t.createTime desc
+        <include refid="Pager.mysqlPage"/>
+    </select>
+
+    <select id="queryPageCount" parameterType="map" resultType="int">
+        select
+        COUNT(1)
+        from tb_od_order t
+        where t.disabled = 0
+        <if test="status != null">
+            and t.status = #{status}
+        </if>
+        <if test="userId != null">
+            and t.userId = #{userId}
+        </if>
+    </select>
 </mapper>

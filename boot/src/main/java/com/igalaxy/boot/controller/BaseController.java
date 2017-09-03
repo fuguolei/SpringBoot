@@ -58,8 +58,8 @@ public class BaseController {
         return null;
     }
 
-    protected String writeResult(HttpServletResponse response, BaseResult result, String[] filed) {
-        HttpUtil.writeJson(response, AppJsonUtils.toJson(result, filed));
+    protected String writeResult(HttpServletResponse response, BaseResult result, String[] field) {
+        HttpUtil.writeJson(response, AppJsonUtils.toJson(result, field));
         return null;
     }
 

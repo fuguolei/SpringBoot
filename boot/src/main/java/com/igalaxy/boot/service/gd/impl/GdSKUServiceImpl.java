@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class GdSKUServiceImpl extends BaseServiceImpl<GdSKU> implements GdSKUService {
-    static Gson gson = new Gson();
 
     @Autowired
     GdSKUMapper gdSKUMapper;
@@ -31,8 +30,6 @@ public class GdSKUServiceImpl extends BaseServiceImpl<GdSKU> implements GdSKUSer
 
     @Override
     public GdSKU queryByNumber(String number) {
-        if (number == null || number.length() <= 0)
-            return null;
         return gdSKUMapper.queryByNumber(number);
     }
 }

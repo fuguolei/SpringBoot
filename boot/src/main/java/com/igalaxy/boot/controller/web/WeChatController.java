@@ -13,6 +13,16 @@ import java.util.Map;
  * Created by fuguolei on 2017/8/14.
  */
 public class WeChatController extends BaseController {
+    protected Map<String, Object> getPageParams() {
+        HttpServletRequest request = getServletRequest();
+        Map<String, Object> pageParams = new HashMap<>();
+        if (request.getParameter("rows") != null) {
+            pageParams.put("pageSize", Integer.parseInt(request.getParameter("rows")));
+            pageParams.put("pageNo", Integer.parseInt(request.getParameter("page")));
+        }
+        return pageParams;
+    }
+
     protected Map<String, Object> getWchatParams(HttpServletRequest request) {
         Map<String, Object> params;
         try {

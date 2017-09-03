@@ -31,7 +31,9 @@ public class GdProductController extends WeChatController {
             return null;
         }
         GdSKU gdSKU = gdSKUService.queryFirstByProductId(id);
-        String location = "/gd/sku/" + gdSKU.getInventory() + ".html";
+        if (gdSKU == null)
+            return "web/gd/no_product";
+        String location = "/gd/sku/" + gdSKU.getNumber() + ".html";
         response.addHeader("location", location);
         response.setStatus(302);
         return null;

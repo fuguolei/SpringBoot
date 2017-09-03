@@ -33,7 +33,7 @@ public class OdProperty {
             return desc;
         }
 
-        public OdPayWayEnum valueOf(int value) {
+        public static OdPayWayEnum valueOf(int value) {
             switch (value) {
                 case 0:
                     return UnKnown;

@@ -2,14 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>Title</title>
+    <title>订单确认</title>
     <script type="text/javascript" src="/jquery-easyui/jquery.min.js"></script>
-    <script type="text/javascript" src="/jquery-easyui/jquery.easyui.min.js"></script>
-    <script type="text/javascript" src="/jquery-easyui/locale/easyui-lang-zh_CN.js"></script>
-    <script type="text/javascript" src="/js/jquery.json.js"></script>
-    <script type="text/javascript" src="/js/base/common.js?1"></script>
-    <script type="text/javascript" src="/js/base/listview.js?1"></script>
-    <script type="text/javascript" src="/js/base/fileupload.js"></script>
     <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"/>
     <script th:inline="javascript">
 
@@ -19,7 +13,7 @@
             timestamp: [[${timestamp}]],
             nonceStr: [[${nonceStr}]],
             signature: [[${signature}]],
-            jsApiList: ['chooseWXPay','onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareWeibo', 'onMenuShareQZone'] // 功能列表，我们要使用JS-SDK的什么功能
+            jsApiList: ['chooseWXPay', 'onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareWeibo', 'onMenuShareQZone'] // 功能列表，我们要使用JS-SDK的什么功能
         });
 
         function orderPay() {
@@ -47,23 +41,49 @@
                 function (res) {
                     if (res.err_msg == "get_brand_wcpay_request:ok") {
                     }     // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
+                    window.location.href = "/od/order/" + data.orderNumber + ".html"
                 }
             );
         }
-        //        if (typeof WeixinJSBridge == "undefined"){
-        //            if( document.addEventListener ){
-        //                document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
-        //            }else if (document.attachEvent){
-        //                document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
-        //                document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
-        //            }
-        //        }else{
-        //            onBridgeReady();
-        //        }
     </script>
 </head>
 <body>
-<button type="button" onclick="orderPay()">提交订单</button>
-<!--<input type="button" name="提交订单" onclick="orderPay"/>-->
+<dev th:each="shopping:${list}">
+    <input type="hidden" th:value="|${shopping.skuId},${shopping.count}|"/>
+    <!--th:text="'商品编号:'+${shopping.skuId}"></>-->
+    <p th:text="|商品名称:${shopping.name}|"></p>
+    <p th:text="|商品单价:${shopping.price}|"></p>
+    <p th:text="|数量:${shopping.count}|"></p>
+    <p>-----------------------------</p>
+</dev>
+
+<a href="#" onclick="submit()">微信支付</a>
+<script>
+    function submit() {
+        var params = new Array();
+        $("input").each(function (index) {
+            params[index] = $(this).val();
+        })
+        $.ajax({
+            url: "/od/order/submit-pay.json",
+            data: {
+                sku: params
+            },
+            type: "POST",
+            cache: false,
+            dataType: "json",
+            success: function (result) {
+                if (result.success) {
+                    onBridgeReady(data.data);
+                } else {
+                    alert(result.msg);
+                }
+            },
+            error: function (msg) {
+                alert("系统错误,请与管理员联系");
+            }
+        });
+    }
+</script>
 </body>
 </html>

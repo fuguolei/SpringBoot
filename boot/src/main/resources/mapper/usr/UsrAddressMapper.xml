@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.igalaxy.boot.mapper.usr.UsrAddressMapper">
+
+    <insert id="save" parameterType="UsrAddress">
+        INSERT INTO tb_usr_address (
+        userId,
+        `name`,
+        userName,
+        postalCode,
+        provinceName,
+        cityName,
+        countryName,
+        detailInfo,
+        nationalCode,
+        telNumber,
+        createUser,
+        createTime,
+        updateUser,
+        updateTime,
+        disabled
+        ) VALUE (
+        #{userId},
+        #{name},
+        #{userName},
+        #{postalCode},
+        #{provinceName},
+        #{cityName},
+        #{countryName},
+        #{detailInfo},
+        #{nationalCode},
+        #{telNumber},
+        #{createUser},
+        now(),
+        #{updateUser},
+        now(),
+        0
+        )
+        <selectKey resultType="long" keyProperty="id">
+            select LAST_INSERT_ID() as id
+        </selectKey>
+    </insert>
+
+    <select id="queryById" parameterType="long" resultType="UsrAddress">
+        select * from tb_usr_address t
+        where t.disabled = 0 and t.id = #{id}
+    </select>
+
+    <select id="queryMyList" parameterType="long" resultType="UsrAddress">
+        select * from tb_usr_address t
+        where t.disabled = 0 and t.userId = #{userId}
+    </select>
+
+</mapper>

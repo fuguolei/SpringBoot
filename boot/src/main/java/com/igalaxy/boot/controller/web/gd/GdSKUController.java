@@ -25,7 +25,9 @@ public class GdSKUController extends WeChatController {
     @RequestMapping("/{number}.html")
     public String index(HttpServletRequest request, @PathVariable String number, HttpServletResponse response) {
         GdSKU gdSKU = gdSKUService.queryByNumber(number);
+        if (gdSKU == null)
+            return "web/gd/no_product";
         request.setAttribute("sku", gdSKU);
-        return "wechat/gd/sku";
+        return "web/gd/sku";
     }
 }

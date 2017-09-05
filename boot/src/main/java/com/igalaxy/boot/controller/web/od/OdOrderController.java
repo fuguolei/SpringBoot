@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +38,12 @@ public class OdOrderController extends WeChatController {
     PayWeChatService payWeChatService;
 
     @RequestMapping("/list.html")
-    public String list() {
+    public String list(Integer page, HttpServletRequest request) {
+        Map<String, Object> pageParams = new HashMap<>();
+        pageParams.put("pageSize", 10);
+        pageParams.put("pageNo", page != null ? page : 1);
+        ListViewPage listViewPage = odOrderService.queryMyOdOrderDetailPageList(pageParams);
+        request.setAttribute("list", listViewPage);
         return "web/od/order/list";
     }
 
@@ -69,7 +75,7 @@ public class OdOrderController extends WeChatController {
         List<OdOrderSKU> details = new ArrayList<>();
         OdOrderSKU detail;
         for (int i = 0; i < sku.length; i++) {
-            String[] arr = sku[i].split(",");
+            String[] arr = sku[i].split("/");
             detail = new OdOrderSKU();
             detail.setSkuId(Long.parseLong(arr[0]));
             detail.setCount(Integer.parseInt(arr[1]));
@@ -89,7 +95,7 @@ public class OdOrderController extends WeChatController {
         List<OdOrderSKU> details = new ArrayList<>();
         OdOrderSKU detail;
         for (int i = 0; i < sku.length; i++) {
-            String[] arr = sku[i].split(",");
+            String[] arr = sku[i].split("/");
             detail = new OdOrderSKU();
             detail.setSkuId(Long.parseLong(arr[0]));
             detail.setCount(Integer.parseInt(arr[1]));

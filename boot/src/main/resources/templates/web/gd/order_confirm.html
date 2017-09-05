@@ -3,53 +3,77 @@
 <head>
     <meta charset="UTF-8"/>
     <title>订单确认</title>
+    <link rel="stylesheet" type="text/css" href="/css/web/common.css"/>
     <script type="text/javascript" src="/jquery-easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/base/common.js"></script>
     <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"/>
     <script th:inline="javascript">
 
         wx.config({
-            debug: false,
+            debug: true,
             appId: [[${appId}]],
             timestamp: [[${timestamp}]],
             nonceStr: [[${nonceStr}]],
             signature: [[${signature}]],
-            jsApiList: ['chooseWXPay', 'onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareWeibo', 'onMenuShareQZone'] // 功能列表，我们要使用JS-SDK的什么功能
+            jsApiList: ['openAddress', 'chooseWXPay', 'onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareWeibo', 'onMenuShareQZone'] // 功能列表，我们要使用JS-SDK的什么功能
         });
 
         function orderPay() {
-            ajax({
+            $.ajax({
                 url: "/pay/wechat.json",
                 data: {
                     orderId: [[${orderId}]]
                 },
-                success: function (data) {
-                    onBridgeReady(data.data);
-                }
-            })
-        }
-
-        function onBridgeReady(data) {
-            WeixinJSBridge.invoke(
-                'getBrandWCPayRequest', {
-                    appId: data.appId,     //公众号名称，由商户传入
-                    timeStamp: data.timeStamp,         //时间戳，自1970年以来的秒数
-                    nonceStr: data.nonceStr, //随机串
-                    package: data.package,
-                    signType: "MD5",         //微信签名方式：
-                    paySign: data.paySign //微信签名
+                type: "POST",
+                cache: false,
+                dataType: "json",
+                success: function (result) {
+                    if (result.success) {
+                        onBridgeReady(result.data);
+                    } else {
+                        alert(result.msg);
+                    }
                 },
-                function (res) {
-                    if (res.err_msg == "get_brand_wcpay_request:ok") {
-                    }     // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
-                    window.location.href = "/od/order/" + data.orderNumber + ".html"
+                error: function (msg) {
+                    alert("系统错误,请与管理员联系");
                 }
-            );
+            });
         }
 
+//        function onBridgeReady(data) {
+//            WeixinJSBridge.invoke(
+//                'getBrandWCPayRequest', {
+//                    appId: data.appId,     //公众号名称，由商户传入
+//                    timeStamp: data.timeStamp,         //时间戳，自1970年以来的秒数
+//                    nonceStr: data.nonceStr, //随机串
+//                    package: data.package,
+//                    signType: "MD5",         //微信签名方式：
+//                    paySign: data.paySign //微信签名
+//                },
+//                function (res) {
+//                    if (res.err_msg == "get_brand_wcpay_request:ok") {
+//                    }     // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
+//
+//                }
+//            );
+//        }
+
+        function chooseWXPay() {
+            wx.chooseWXPay({
+                timestamp: data.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+                nonceStr: data.nonceStr, // 支付签名随机串，不长于 32 位
+                package: data.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
+                signType: "MD5", // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+                paySign: data.paySign, // 支付签名
+                success: function (res) {
+                    // 支付成功后的回调函数
+                }
+            });
+        }
         function openAddress() {
             wx.openAddress({
                 success: function (res) {
-                    ajax({
+                    $.ajax({
                         url: "/usr/address/add.json",
                         data: {
                             userName: res.userName,
@@ -61,10 +85,20 @@
                             nationalCode: res.nationalCode,
                             telNumber: res.telNumber
                         },
-                        success: function (data) {
-                            location.replace(location)
+                        type: "POST",
+                        cache: false,
+                        dataType: "json",
+                        success: function (result) {
+                            if (result.success) {
+                                location.replace(location)
+                            } else {
+                                alert(result.msg);
+                            }
+                        },
+                        error: function (msg) {
+                            alert("系统错误,请与管理员联系");
                         }
-                    })
+                    });
                 }
             });
         }
@@ -72,16 +106,16 @@
 </head>
 <body>
 <a th:if="${address}==null" href="#" onclick="openAddress()">请输入收货地址</a>
-<a  href="/usr/address/list.html">收货地址列表</a>
+<a href="/usr/address/list.html">收货地址列表</a>
 
 <dev th:if="${address}!=null">
     <a th:text="${address.userName}" href="/usr/address/list.html"></a>
     <p th:text="${address.telNumber}"></p>
-    <p th:text="|${address.countryName} ${address.provinceName} ${address.cityName} ${address.nationalCode} |"></p>
+    <p th:text="|${address.provinceName} ${address.cityName} ${address.countryName} ${address.detailInfo} |"></p>
 </dev>
 <p>======================================</p>
 <dev th:each="shopping:${list}">
-    <input type="hidden" th:value="|${shopping.skuId},${shopping.count}|"/>
+    <input type="hidden" th:value="|${shopping.skuId}/${shopping.count}|"/>
     <!--th:text="'商品编号:'+${shopping.skuId}"></>-->
     <img th:src="${shopping.picture}" width="100" height="100"/>
     <p th:text="|商品名称:${shopping.name}|"></p>
@@ -107,7 +141,7 @@
             dataType: "json",
             success: function (result) {
                 if (result.success) {
-                    onBridgeReady(data.data);
+                    chooseWXPay(result.data);
                 } else {
                     alert(result.msg);
                 }

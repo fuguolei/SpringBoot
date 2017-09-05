@@ -12,7 +12,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Created by jinlong on 2017/2/2.
+ * Created by fuguolei on 2017/2/2.
  */
 @Controller
 @RequestMapping("/admin/sys/password")

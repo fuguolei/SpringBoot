@@ -41,7 +41,7 @@ public class UsrAddressServiceImpl extends BaseServiceImpl<UsrAddress> implement
         if (usrUser != null && usrUser.getDefaultAddress() != null)
             usrAddress = queryById(usrUser.getDefaultAddress());
         if (usrAddress == null)
-            usrAddressMapper.queryMyNewOne(getUserId());
+            usrAddress = usrAddressMapper.queryMyNewOne(getUserId());
         return usrAddress;
     }
 }

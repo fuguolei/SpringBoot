@@ -1,10 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <title>我的订单</title>
+    <link rel="stylesheet" type="text/css" href="/css/web/common.css"/>
 </head>
 <body>
+<dev th:each="order:${list}">
+    <!--th:text="'商品编号:'+${shopping.skuId}"></>-->
+    <p th:text="${order.number}"></p>
+    <p>***************</p>
+    <dev th:each="sku:${order.skus}">
+        <!--th:text="'商品编号:'+${shopping.skuId}"></>-->
+        <img th:src="${sku.picture}" width="100" height="100"/>
+        <p th:text="|商品名称:${sku.name}|"></p>
+        <p th:text="|商品单价:${sku.price}|"></p>
+        <p th:text="|数量:${sku.count}|"></p>
 
+    </dev>
+    <p>-----------------------------</p>
+</dev>
 </body>
 </html>

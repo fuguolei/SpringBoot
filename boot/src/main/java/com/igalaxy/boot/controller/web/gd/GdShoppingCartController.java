@@ -9,11 +9,13 @@ import com.igalaxy.boot.service.usr.UsrAddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by fuguolei on 2017/8/5.
@@ -70,19 +72,21 @@ public class GdShoppingCartController extends WeChatController {
     }
 
     @RequestMapping("confirm.html")
-    public String confirm(String skuIds, HttpServletRequest request) {
+    public ModelAndView confirm(String skuIds, HttpServletRequest request) {
         if (skuIds == null) {
             request.setAttribute("msg", "skuIds不能为空");
-            return "error/5xx";
+            return new ModelAndView("error/5xx");
         }
         String[] strIds = skuIds.split(",");
         List<Long> skuIdList = new ArrayList<>();
         for (int i = 0; i < strIds.length; i++)
             skuIdList.add(Long.parseLong(strIds[i]));
         List<GdShoppingCartSKU> list = gdShoppingCartService.queryList(skuIdList);
-        request.setAttribute("list", list);
+
+        Map<String, Object> params = getWchatParams(request);
+        params.put("list", list);
         UsrAddress address = usrAddressService.queryDefaultAddress();
-        request.setAttribute("address", address);
-        return "web/gd/order_confirm";
+        params.put("address", address);
+        return new ModelAndView("web/gd/order_confirm", params);
     }
 }

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Created by jinlong on 2017/2/3.
+ * Created by fuguolei on 2017/2/3.
  */
 @Controller
 @RequestMapping("/admin/sys/role")

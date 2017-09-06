@@ -9,6 +9,7 @@
 <dev th:each="order:${list}">
     <!--th:text="'商品编号:'+${shopping.skuId}"></>-->
     <p th:text="${order.number}"></p>
+    <p th:text="${order.status.desc}"></p>
     <p>***************</p>
     <dev th:each="sku:${order.skus}">
         <!--th:text="'商品编号:'+${shopping.skuId}"></>-->

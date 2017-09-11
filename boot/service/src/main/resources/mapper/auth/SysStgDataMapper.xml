@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.igalaxy.boot.mapper.auth.SysStgDataMapper">
+    <insert id="save" parameterType="SysStgData">
+
+        insert into tb_sys_stg_data (
+        `hash`,
+        `key`,
+        createTime,
+        updateTime,
+        domain,
+        url,
+        type,
+        `status`,
+        bizId,
+        disabled,
+        bucket,
+        uploadName,
+        prefix
+        ) values(
+        #{hash},
+        #{key},
+        now(),
+        now(),
+        #{domain},
+        #{url},
+        #{type},
+        #{status},
+        #{bizId},
+        0,
+        #{bucket},
+        #{uploadName},
+        #{prefix}
+        )
+
+        <selectKey resultType="long" keyProperty="id">
+            select LAST_INSERT_ID() as id
+        </selectKey>
+    </insert>
+
+    <update id="updateBizIdStatusById" parameterType="map">
+        update tb_sys_stg_data
+        set
+        <if test="bizId !=null">
+            biz_id = #{bizId},
+        </if>
+        <if test="status !=null">
+            status = #{status},
+        </if>
+        update_time = now()
+        where id = #{id}
+    </update>
+
+    <select id="queryById" parameterType="long" resultType="SysStgData">
+        select * from tb_sys_stg_data t
+        where t.id = #{id}
+    </select>
+</mapper>

@@ -6,7 +6,13 @@
     <groupId>com.igalaxy</groupId>
     <artifactId>boot</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <modules>
+        <module>service</module>
+        <module>admin</module>
+        <module>h5</module>
+        <module>web</module>
+    </modules>
+    <packaging>pom</packaging>
 
     <name>boot</name>
     <description>Demo project for Spring Boot</description>
@@ -14,7 +20,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.4.RELEASE</version>
+        <version>1.5.6.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -48,7 +54,6 @@
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
-
         <!-- https://mvnrepository.com/artifact/com.alibaba/druid -->
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -96,9 +101,9 @@
             <version>0.0.9</version>
         </dependency>
         <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-devtools</artifactId>-->
-            <!--<optional>true</optional>-->
+        <!--<groupId>org.springframework.boot</groupId>-->
+        <!--<artifactId>spring-boot-devtools</artifactId>-->
+        <!--<optional>true</optional>-->
         <!--</dependency>-->
 
         <dependency>
@@ -115,20 +120,7 @@
             <artifactId>wxpay-sdk</artifactId>
             <version>0.0.3</version>
         </dependency>
+
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-
-                <!--<configuration>-->
-                    <!--<fork>true</fork>&lt;!&ndash; 如果没有该项配置，肯呢个devtools不会起作用，即应用不会restart &ndash;&gt;-->
-                <!--</configuration>-->
-            </plugin>
-        </plugins>
-    </build>
-
 
 </project>

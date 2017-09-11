@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.igalaxy.boot.mapper.auth.AuthRolePermissionMapper">
+
+    <select id="queryByRoleIdPermissionId" parameterType="map" resultType="AuthRolePermission">
+        SELECT * FROM tb_sys_role_permission t
+        WHERE t.roleId = #{roleId} AND t.permissionId = #{permissionId} AND t.disabled = 0
+    </select>
+
+    <update id="deleteByRoleIdPermissionId" parameterType="map">
+        UPDATE tb_sys_role_permission t
+        SET t.disabled = 1,
+        t.updateTime = now(),
+        t.updateUser = #{updateUser}
+        WHERE t.roleId = #{roleId} AND t.permissionId = #{permissionId} AND t.disabled = 0
+    </update>
+
+    <select id="queryById" parameterType="long" resultType="AuthRolePermission">
+        SELECT
+        per.`id` permissionId,
+        rol.`roleId`,
+        per.`name` permissionName,
+        rol.`id`,
+        role.name roleName
+        FROM
+        tb_sys_permission per
+        LEFT JOIN tb_sys_role_permission rol
+        ON per.`id` = rol.`permissionId`
+        AND rol.`disabled` = 0
+        left join tb_sys_role role
+        on role.id = rol.roleId AND role.disabled = 0
+        WHERE rol.id = #{id} AND per.disabled = 0
+    </select>
+
+    <!--<update id="update" parameterType="AuthRolePermission">-->
+    <!--update tb_sys_role t-->
+    <!--<trim prefix="set" suffixOverrides=",">-->
+    <!--t.updateTime = now(),-->
+    <!--t.updateUser = #{updateUser},-->
+    <!--<if test="name != null">t.name = #{name},</if>-->
+    <!--<if test="desc != null">t.desc = #{desc},</if>-->
+    <!--</trim>-->
+    <!--where t.id = #{id}-->
+    <!--</update>-->
+
+    <!--<update id="delete" parameterType="AuthRolePermission">-->
+    <!--update tb_sys_role t-->
+    <!--set t.updateTime = now(),-->
+    <!--t.updateUser = #{updateUser},-->
+    <!--t.disabled = 1-->
+    <!--where t.id = #{id}-->
+    <!--</update>-->
+
+    <insert id="save" parameterType="AuthRolePermission">
+        insert into tb_sys_role_permission (roleId, permissionId, createTime, updateTime, createUser, updateUser, disabled)
+        values (#{roleId}, #{permissionId}, now(), now(), #{createUser}, #{updateUser}, 0)
+        <selectKey resultType="long" keyProperty="id">
+            select LAST_INSERT_ID() as id
+        </selectKey>
+    </insert>
+</mapper>

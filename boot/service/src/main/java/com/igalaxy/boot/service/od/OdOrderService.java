@@ -1,10 +1,8 @@
 package com.igalaxy.boot.service.od;
 
 import com.igalaxy.boot.domain.dto.BaseResult;
-import com.igalaxy.boot.domain.dto.BaseResult1;
 import com.igalaxy.boot.domain.dto.PageData;
 import com.igalaxy.boot.domain.od.OdOrder;
-import com.igalaxy.boot.domain.od.OdOrderDetail;
 import com.igalaxy.boot.domain.od.OdOrderSKU;
 import com.igalaxy.boot.enums.OdProperty.OdOrderStatusEnum;
 import com.igalaxy.boot.enums.OdProperty.OdPayWayEnum;
@@ -18,11 +16,11 @@ import java.util.Map;
  */
 public interface OdOrderService extends BaseService<OdOrder> {
 
-    OdOrderDetail queryOdOrderDetailByNumber(String number);
+    OdOrder queryOdOrderDetailByNumber(String number);
 
     BaseResult<OdOrder> createOrder(List<OdOrderSKU> details);
 
-    OdOrderDetail queryByNumber(String number);
+    OdOrder queryByNumber(String number);
 
     BaseResult updateOdOrderByNumber(OdOrderStatusEnum status, OdPayWayEnum payWay, String number);
 

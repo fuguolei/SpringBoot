@@ -1,6 +1,6 @@
 package com.igalaxy.boot.controller.auth;
 
-import com.igalaxy.boot.controller.base.AdminController;
+import com.igalaxy.boot.controller.BaseController;
 import com.igalaxy.boot.domain.auth.AuthRole;
 import com.igalaxy.boot.domain.dto.BaseResult;
 import com.igalaxy.boot.service.auth.AuthRoleService;
@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Controller
 @RequestMapping("/auth/role")
-public class AuthRoleController extends AdminController {
+public class AuthRoleController extends BaseController {
 
     @Autowired
     AuthRoleService authRoleService;

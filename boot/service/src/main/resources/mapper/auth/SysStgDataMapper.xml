@@ -8,8 +8,8 @@
         `key`,
         createTime,
         updateTime,
-        domain,
-        url,
+        `domain`,
+        `url`,
         type,
         `status`,
         bizId,
@@ -20,8 +20,8 @@
         ) values(
         #{hash},
         #{key},
-        now(),
-        now(),
+        #{createTime},
+        #{updateTime},
         #{domain},
         #{url},
         #{type},
@@ -47,7 +47,7 @@
         <if test="status !=null">
             status = #{status},
         </if>
-        update_time = now()
+        update_time = #{updateTime}
         where id = #{id}
     </update>
 

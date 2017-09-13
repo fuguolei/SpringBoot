@@ -33,9 +33,9 @@
         #{nationalCode},
         #{telNumber},
         #{createUser},
-        now(),
+        #{createTime},
         #{updateUser},
-        now(),
+        #{updateTime},
         0
         )
         <selectKey resultType="long" keyProperty="id">

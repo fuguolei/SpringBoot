@@ -71,56 +71,52 @@ function dataDeleteAlert(fun) {
 }
 
 //table
-(function () {
-    $('#dataTable').bootstrapTable({
+$.fn.tableInit = function (userConfig) {
+    if (!userConfig)
+        userConfig = {};
+    $(this).bootstrapTable({
         sidePagination: 'server',
         search: true,
-        pagination: true,
+        pagination: userConfig.pagination ? userConfig.pagination : true,
         showRefresh: true,
         showToggle: true,
         showColumns: true,
-        uniqueId: 'id',
+        uniqueId: userConfig.id ? userConfig.id : 'id',
         iconSize: 'outline',
-        pageList: '[10, 25, 50,100]',
+        pageList: userConfig.pageList ? userConfig.pageList : '[5, 10, 25, 50, 100]',
+        queryParamsType: 'pageSize',
         method: 'post',
-        rowStyle: rowStyle,
-        responseHandler: responseHandler,
-        toolbar: '#dataTableEventsToolbar',
+        contentType: 'application/x-www-form-urlencoded',
+        rowStyle: userConfig.rowStyle ? userConfig.rowStyle : rowStyle,
+        responseHandler: userConfig.responseHandler ? userConfig.responseHandler : responseHandler,
+        toolbar: userConfig.toolbar ? userConfig.toolbar : '#dataTableEventsToolbar',
         icons: {
             refresh: 'glyphicon-repeat',
             toggle: 'glyphicon-list-alt',
             columns: 'glyphicon-list'
         }
     })
+}
 
-    function responseHandler(result) {
-        if (result.status == 200) {
-            var pageData = result.data.rows;
-            for (var i = 0; i < pageData.length; i++) {
-                pageData[i].operation = getOperation(pageData[i].id)
-            }
-            return {
-                "total": result.data.total,
-                "rows": pageData
-            }
-        } else {
-            return {
-                "total": 0,
-                "rows": []
-            }
+
+function responseHandler(result) {
+    if (result.status == 200) {
+        var pageData = result.data.rows;
+        for (var i = 0; i < pageData.length; i++) {
+            pageData[i].operation = getOperation(pageData[i].id)
+        }
+        return {
+            "total": result.data.total,
+            "rows": pageData
+        }
+    } else {
+        return {
+            "total": 0,
+            "rows": []
         }
     }
-})()
-
-
-//分页
-function paginationParam(params) {
-    return {
-        pageSize: params.limit,
-        offset: params.offset,
-        pageNumber: $('#listTable').bootstrapTable('getOptions').pageNumber
-    };
 }
+
 
 function rowStyle(row, index) {
     if (index % 2 === 0) {
@@ -146,7 +142,6 @@ $.fn.formSubmit = function (userConfig) {
         successCallback: function () {
             if (userConfig.success)
                 userConfig.success();
-            form[0].reset();
         },
         errorCallback: userConfig.error
     });
@@ -161,3 +156,7 @@ $.fn.serializeObject = function () {
     });
     return obj;
 };
+
+function goBack() {
+    window.history.go(-1);
+}

@@ -25,9 +25,6 @@
                 <a class="collapse-link">
                     <i class="fa fa-chevron-up"></i>
                 </a>
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="fa fa-wrench"></i>
-                </a>
             </div>
         </div>
         <div class="ibox-content">
@@ -38,7 +35,7 @@
                         <div class="example">
                             <div class="btn-group hidden-xs" id="dataTableEventsToolbar" role="group">
                                 <button type="button" class="btn btn-outline btn-default" data-toggle="modal"
-                                        href="index.html#modal-form">
+                                        onclick="dataAdd()">
                                     <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
                                 </button>
                                 <button type="button" class="btn btn-outline btn-default" onclick="dataDelete()">
@@ -122,7 +119,7 @@
 <script src="/js/common/common.js?18"></script>
 <script>
     function getOperation(id) {
-        return '<a data-toggle="modal" href="index.html#modal-form" onclick="dataEdit(' + id + ')">修改</a>'
+        return '<a onclick="dataEdit(' + id + ')">修改</a>'
     }
 
     function dataDelete() {
@@ -140,7 +137,7 @@
                 ajax({
                     url: "delete.json",
                     data: {
-                        id:list[0].id
+                        id: list[0].id
                     },
                     successCallback: function (result) {
                         $('#dataTable').bootstrapTable('refresh');
@@ -150,7 +147,15 @@
         })
     }
 
+    function dataAdd() {
+        $("#formTitle").text("新增");
+        $('#modal-form').modal('show')
+        document.getElementById("dataForm").reset();
+    }
+
     function dataEdit(id) {
+        $("#formTitle").text("修改");
+        $('#modal-form').modal('show')
         var row = $('#dataTable').bootstrapTable('getRowByUniqueId', id);
         $("#id").val(row.id);
         $("#name").val(row.name);
@@ -158,6 +163,7 @@
     }
 
     $().ready(function () {
+        $("#dataTable").tableInit();
         $("#dataForm").validate();
     });
 

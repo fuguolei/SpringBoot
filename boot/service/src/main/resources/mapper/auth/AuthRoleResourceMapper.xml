@@ -3,7 +3,7 @@
 <mapper namespace="com.igalaxy.boot.mapper.auth.AuthRoleResourceMapper">
 
     <update id="delete" parameterType="AuthRoleResource">
-        update tb_sys_role_resource
+        update tb_auth_role_resource
         set updateTime = now(),
             updateUser = #{updateUser},
             disabled = 1
@@ -11,10 +11,10 @@
     </update>
 
     <insert id="save" parameterType="AuthRoleResource">
-        insert into tb_sys_role_resource
+        insert into tb_auth_role_resource
         (roleId, resourceId, createTime, createUser, updateTime, updateUser, disabled)
         values
-        (#{roleId}, #{resourceId}, now(), #{createUser}, now(), #{updateUser}, 0)
+        (#{roleId}, #{resourceId}, #{createTime}, #{createUser}, #{updateTime}, #{updateUser}, 0)
         <selectKey resultType="long" keyProperty="id">
             select LAST_INSERT_ID() as id
         </selectKey>
@@ -29,18 +29,18 @@
         res.`parentId`,
         role.name roleName
         FROM
-        tb_sys_resource res
-        LEFT JOIN tb_sys_role_resource rol
+        tb_auth_resource res
+        LEFT JOIN tb_auth_role_resource rol
         ON res.`id` = rol.`resourceId`
         AND rol.`disabled` = 0
-        left join tb_sys_role role
+        left join tb_auth_role role
             on role.id = rol.roleId
         WHERE rol.id = #{id}
     </select>
 
     <update id="deleteByRoleIdResourceId" parameterType="map">
-        update tb_sys_role_resource
-        set updateTime = now(),
+        update tb_auth_role_resource
+        set updateTime = #{updateTime},
         updateUser = #{updateUser},
         disabled = 1
         where roleId = #{roleId} AND resourceId = #{resourceId} AND disabled = 0

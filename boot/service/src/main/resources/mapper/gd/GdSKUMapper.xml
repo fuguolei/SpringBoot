@@ -4,6 +4,91 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.igalaxy.boot.mapper.gd.GdSKUMapper">
 
+    <insert id="save" parameterType="GdSKU">
+        INSERT INTO tb_gd_sku (
+        productId,
+        `number`,
+        `name`,
+        description,
+        ad,
+        price,
+        originalPrice,
+        picture,
+        inventory,
+        sale,
+        category,
+        sort,
+        createTime,
+        createUser,
+        updateTime,
+        updateUser,
+        disabled
+        )VALUES (
+        #{productId},
+        #{number},
+        #{name},
+        #{description},
+        #{ad},
+        #{price},
+        #{originalPrice},
+        #{picture},
+        #{inventory},
+        #{sale},
+        #{category},
+        #{sort},
+        #{createTime},
+        #{createUser},
+        #{updateTime},
+        #{updateUser},
+        0
+        )
+        <selectKey resultType="long" keyProperty="id">
+            select LAST_INSERT_ID() as id
+        </selectKey>
+    </insert>
+
+    <update id="update" parameterType="GdSKU">
+        UPDATE tb_gd_sku t
+        SET
+        <if test="productId != null">t.productId = #{productId},</if>
+        <if test="number != null">t.number = #{number},</if>
+        <if test="name != null">t.name = #{name},</if>
+        <if test="description != null">t.description = #{description},</if>
+        <if test="ad != null">t.ad = #{ad},</if>
+        <if test="price != null">t.price = #{price},</if>
+        <if test="originalPrice != null">t.originalPrice = #{originalPrice},</if>
+        <if test="picture != null">t.picture = #{picture},</if>
+        <if test="inventory != null">t.inventory = #{inventory},</if>
+        <if test="sale != null">t.sale = #{sale},</if>
+        <if test="category != null">t.category = #{category},</if>
+        <if test="sort != null">t.sort = #{sort},</if>
+        t.updateTime = #{updateTime},
+        t.updateUser = #{updateUser}
+        where t.id = #{id}
+    </update>
+
+    <update id="delete" parameterType="GdSKU">
+        UPDATE tb_gd_sku t
+        SET
+        t.disabled = 1,
+        t.updateTime = #{updateTime},
+        t.updateUser = #{updateUser}
+        where t.id = #{id}
+    </update>
+
+    <select id="queryPage" parameterType="map" resultType="GdSKU">
+        select t.* from tb_gd_sku t
+        where t.disabled = 0
+        <if test="productId != null">AND t.productId = #{productId}</if>
+        <include refid="Pager.mysqlPage"/>
+    </select>
+
+    <select id="queryPageCount" parameterType="map" resultType="int">
+        select count(1) from tb_gd_sku t
+        where t.disabled = 0
+        <if test="productId != null">AND t.productId = #{productId}</if>
+    </select>
+
     <select id="queryById" parameterType="long" resultType="GdSKU">
         SELECT * FROM tb_gd_sku t
         WHERE t.disabled = 0 AND t.id = #{id}

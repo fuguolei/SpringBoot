@@ -18,7 +18,7 @@ public interface BaseService<T> {
 
     BaseResult delete(T t);
 
-    PageData queryPageList(Map<String, Object> params);
+    PageData queryPage(Map<String, Object> params);
 
-    List<T> queryAllPageData(Map<String, Object> params);
+    List<T> queryAllData(Map<String, Object> params);
 }

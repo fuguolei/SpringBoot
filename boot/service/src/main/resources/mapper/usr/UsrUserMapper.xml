@@ -34,8 +34,8 @@
     </resultMap>
 
     <select id="selecAllRole" resultMap="allRoleMap">
-        select r.* from tb_sys_user_role t
-        inner join tb_sys_role r
+        select r.* from tb_auth_user_role t
+        inner join tb_auth_role r
         on t.roleId = r.id and r.disabled = 0
         where t.disabled = 0 and t.userId = #{id}
     </select>
@@ -47,16 +47,16 @@
     </resultMap>
 
     <select id="selectAllResource" resultType="AuthResource">
-        select * from tb_sys_role_resource t
-        inner join tb_sys_resource r
+        select * from tb_auth_role_resource t
+        inner join tb_auth_resource r
         ON t.resourceId = r.id and r.disabled = 0
         where t.roleId = #{id} and t.disabled = 0
         group by r.url
     </select>
 
     <select id="selectAllPermission" resultType="AuthPermission">
-        select * from tb_sys_role_permission t
-        inner join tb_sys_permission p
+        select * from tb_auth_role_permission t
+        inner join tb_auth_permission p
         ON t.permissionId = p.id and p.disabled = 0
         where t.roleId = #{id} and t.disabled = 0
     </select>
@@ -87,7 +87,7 @@
         (`name`, account, password,createUser, createTime, updateUser, updateTime, disabled,
         repeatPassword)
         values
-        (#{name}, #{account}, #{password}, #{createUser}, now(), #{updateUser}, now(), 0,
+        (#{name}, #{account}, #{password}, #{createUser}, #{createTime}, #{updateUser}, #{updateTime}, 0,
         #{repeatPassword})
         <selectKey resultType="long" keyProperty="id">
             select LAST_INSERT_ID() as id
@@ -97,7 +97,7 @@
     <update id="update" parameterType="UsrUser">
         update tb_usr_user t
         <trim prefix="set" suffixOverrides=",">
-            t.updateTime = now(),
+            t.updateTime = #{updateTime},
             t.updateUser = #{updateUser},
             <if test="name != null">t.name = #{name},</if>
             <if test="password != null">t.password = #{password},</if>
@@ -108,7 +108,7 @@
 
     <update id="delete" parameterType="UsrUser">
         update tb_usr_user t
-        set t.updateTime = now(),
+        set t.updateTime = #{updateTime},
         t.updateUser = #{updateUser},
         t.disabled = 1
         where t.id = #{id}
@@ -117,7 +117,7 @@
     <update id="setPassword" parameterType="UsrUser">
         update tb_usr_user t
         <trim prefix="set" suffixOverrides=",">
-            t.updateTime = now(),
+            t.updateTime = #{updateTime},
             t.updateUser = #{updateUser},
             t.password = #{password},
             t.repeatPassword = #{repeatPassword}
@@ -128,7 +128,7 @@
     <update id="replaceUser" parameterType="map">
         update tb_usr_user t
         <trim prefix="set" suffixOverrides=",">
-            t.updateTime = now(),
+            t.updateTime = #{updateTime},
             t.updateUser = #{updateUser},
             t.parentId = #{replaceUser}
         </trim>

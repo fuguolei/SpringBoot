@@ -3,24 +3,24 @@
 <mapper namespace="com.igalaxy.boot.mapper.auth.AuthResourceMapper">
 
     <select id="queryById" parameterType="long" resultType="AuthResource">
-        select * from tb_sys_resource t
+        select * from tb_auth_resource t
         where t.id = #{id} AND t.disabled = 0
     </select>
 
     <select id="getAll" resultType="AuthResource">
-        select * from tb_sys_resource t
+        select * from tb_auth_resource t
         where t.disabled = 0
     </select>
 
     <select id="selectAllResourceByUserId" parameterType="long" resultType="AuthResource">
         SELECT res.* FROM tb_usr_user u
-        INNER JOIN tb_sys_user_role ur
+        INNER JOIN tb_auth_user_role ur
         ON u.`id` = ur.`userId` AND ur.`disabled` = 0
-        INNER JOIN tb_sys_role role
+        INNER JOIN tb_auth_role role
         ON ur.`roleId` = role.`id` AND role.`disabled` = 0
-        INNER JOIN tb_sys_role_resource roleRes
+        INNER JOIN tb_auth_role_resource roleRes
         ON role.`id` = roleRes.`roleId` AND roleRes.`disabled` = 0
-        INNER JOIN tb_sys_resource res
+        INNER JOIN tb_auth_resource res
         ON res.`id` = roleRes.`resourceId` AND res.`disabled` = 0
         WHERE u.`id` = #{userId}
         group by res.id
@@ -31,8 +31,8 @@
         t.*,
         CASE WHEN r.id IS NOT NULL THEN 1 ELSE 0 END hasPermission
         FROM
-        tb_sys_resource t
-        LEFT JOIN tb_sys_role_resource r
+        tb_auth_resource t
+        LEFT JOIN tb_auth_role_resource r
         ON t.`id` = r.`resourceId` AND r.`disabled` = 0 AND r.`roleId` = #{roleId}
         WHERE t.`disabled` = 0
     </select>
@@ -43,7 +43,7 @@
     </resultMap>
 
     <select id="selectAllPermission" resultType="AuthPermission">
-        select * from tb_sys_permission t
+        select * from tb_auth_permission t
         where t.resourceId = #{id} and t.disabled = 0
     </select>
 </mapper>

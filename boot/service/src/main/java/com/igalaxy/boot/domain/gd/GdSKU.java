@@ -1,7 +1,7 @@
 package com.igalaxy.boot.domain.gd;
 
 import com.igalaxy.boot.domain.BaseDomain;
-import com.igalaxy.boot.enums.GdProperty.GdSaleEnum;
+import com.igalaxy.boot.enums.SysProperty.SysSaleEnum;
 
 /**
  * Created by fuguolei on 2017/8/31.
@@ -16,7 +16,7 @@ public class GdSKU extends BaseDomain {
     private Double originalPrice;
     private String picture;
     private Long inventory;
-    private GdSaleEnum sale;
+    private SysSaleEnum sale;
     private String category;
     private Integer sort;
 
@@ -92,11 +92,11 @@ public class GdSKU extends BaseDomain {
         this.inventory = inventory;
     }
 
-    public GdSaleEnum getSale() {
+    public SysSaleEnum getSale() {
         return sale;
     }
 
-    public void setSale(GdSaleEnum sale) {
+    public void setSale(SysSaleEnum sale) {
         this.sale = sale;
     }
 

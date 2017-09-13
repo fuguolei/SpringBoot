@@ -3,7 +3,7 @@
 <mapper namespace="com.igalaxy.boot.mapper.auth.AuthRoleMapper">
 
     <select id="queryPage" parameterType="map" resultType="AuthRole">
-        select * from tb_sys_role t
+        select * from tb_auth_role t
         where t.disabled = 0
         <if test="txtRoleName != null">
             and t.name like CONCAT('%', #{txtRoleName},'%')
@@ -17,12 +17,12 @@
     </select>
 
     <select id="queryById" parameterType="long" resultType="AuthRole">
-        select * from tb_sys_role t
+        select * from tb_auth_role t
         where t.id = #{id}
     </select>
 
     <select id="queryPageCount" parameterType="map" resultType="int">
-        select count(1) from tb_sys_role t
+        select count(1) from tb_auth_role t
         where t.disabled = 0
         <if test="txtRoleName != null">
             and t.name like CONCAT('%', #{txtRoleName},'%')
@@ -34,9 +34,9 @@
     </select>
 
     <update id="update" parameterType="AuthRole">
-        update tb_sys_role t
+        update tb_auth_role t
         <trim prefix="set" suffixOverrides=",">
-            t.updateTime = now(),
+            t.updateTime = #{updateTime},
             t.updateUser = #{updateUser},
             <if test="name != null">t.name = #{name},</if>
             <if test="description != null">t.description = #{description},</if>
@@ -45,15 +45,18 @@
     </update>
 
     <update id="delete" parameterType="AuthRole">
-        update tb_sys_role t
-        set t.updateTime = now(),
+        update tb_auth_role t
+        set t.updateTime = #{updateTime},
             t.updateUser = #{updateUser},
             t.disabled = 1
         where t.id = #{id}
     </update>
 
     <insert id="save" parameterType="AuthRole">
-        insert into tb_sys_role (name, `description`, createTime, updateTime, createUser, updateUser, disabled)
-        values (#{name}, #{description}, now(), now(), #{createUser}, #{updateUser}, 0)
+        insert into tb_auth_role (name, `description`, createTime, updateTime, createUser, updateUser, disabled)
+        values (#{name}, #{description}, #{createTime}, #{updateTime}, #{createUser}, #{updateUser}, 0)
+        <selectKey resultType="long" keyProperty="id">
+            select LAST_INSERT_ID() as id
+        </selectKey>
     </insert>
 </mapper>

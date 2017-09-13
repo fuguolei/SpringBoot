@@ -37,7 +37,7 @@ public class PayWeChatServiceImpl implements PayWeChatService {
     MyWXPayConfig config = new MyWXPayConfig();
     WXPay wxpay = new WXPay(config);
 
-    @Resource
+    @Autowired
     OdOrderService odOrderService;
 
     @Autowired

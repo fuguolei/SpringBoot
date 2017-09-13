@@ -4,6 +4,8 @@ import com.igalaxy.boot.domain.BaseDomain;
 import com.igalaxy.boot.enums.OdProperty.OdOrderStatusEnum;
 import com.igalaxy.boot.enums.OdProperty.OdPayWayEnum;
 
+import java.util.List;
+
 import static com.igalaxy.boot.enums.OdProperty.OdPayWayEnum.UnKnown;
 
 /**
@@ -18,6 +20,22 @@ public class OdOrder extends BaseDomain {
     private Long userId;
     private OdPayWayEnum payWay = UnKnown;
     private OdOrderStatusEnum status;
+    private Long expressId;
+    private String expressNumber;
+
+
+    //链表查询
+    private List<OdOrderSKU> skus;
+    private String expressName;
+    private String userName;
+
+    public List<OdOrderSKU> getSkus() {
+        return skus;
+    }
+
+    public void setSkus(List<OdOrderSKU> skus) {
+        this.skus = skus;
+    }
 
     public String getNumber() {
         return number;
@@ -73,5 +91,37 @@ public class OdOrder extends BaseDomain {
 
     public void setSum(Double sum) {
         this.sum = sum;
+    }
+
+    public Long getExpressId() {
+        return expressId;
+    }
+
+    public void setExpressId(Long expressId) {
+        this.expressId = expressId;
+    }
+
+    public String getExpressNumber() {
+        return expressNumber;
+    }
+
+    public void setExpressNumber(String expressNumber) {
+        this.expressNumber = expressNumber;
+    }
+
+    public String getExpressName() {
+        return expressName;
+    }
+
+    public void setExpressName(String expressName) {
+        this.expressName = expressName;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

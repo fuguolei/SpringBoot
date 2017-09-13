@@ -1,6 +1,6 @@
 package com.igalaxy.boot.controller.auth;
 
-import com.igalaxy.boot.controller.base.AdminController;
+import com.igalaxy.boot.controller.BaseController;
 import com.igalaxy.boot.domain.auth.AuthRole;
 import com.igalaxy.boot.domain.auth.AuthUserRole;
 import com.igalaxy.boot.domain.dto.BaseResult;
@@ -23,7 +23,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/auth/role/user")
-public class AuthUserRoleController extends AdminController {
+public class AuthUserRoleController extends BaseController {
 
     @Resource
     AuthUserRoleService authUserRoleService;
@@ -57,7 +57,7 @@ public class AuthUserRoleController extends AdminController {
     @RequestMapping(value = "/getNoUserInRoleList.html", method = RequestMethod.POST)
     public String selectNoUserInRole(long roleId, HttpServletResponse response) {
         List<AuthUserRole> list = authUserRoleService.selectNoUserInRole(roleId);
-        return writeResultOld(response, list);
+        return null;
     }
 
     @RequestMapping(value = "/add.json", method = RequestMethod.POST)

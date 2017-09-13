@@ -27,9 +27,9 @@
         #{price},
         #{count},
         #{createUser},
-        now(),
+        #{createTime},
         #{updateUser},
-        now(),
+        #{updateTime},
         0)
         <selectKey resultType="long" keyProperty="id">
             select LAST_INSERT_ID() as id
@@ -67,13 +67,13 @@
         update tb_od_order_sku t
         <if test="count != null">t.name = #{count},</if>
         t.updateUser = #{updateUser},
-        t.updateTime = now()
+        t.updateTime = #{updateTime}
         where t.id = #{id}
     </update>
 
     <update id="delete" parameterType="OdOrderSKU">
         update tb_od_order_sku t
-        set t.updateTime = now(),
+        set t.updateTime = #{updateTime},
         t.updateUser = #{updateUser},
         t.disabled = 1
         where t.id = #{id}
@@ -88,5 +88,18 @@
     <select id="queryListByOrderId" parameterType="long" resultType="OdOrderSKU">
         select * from tb_od_order_sku t
         where t.disabled = 0 and t.orderId = #{orderId}
+    </select>
+
+    <select id="queryPage" parameterType="map" resultType="OdOrderSKU">
+        select t.* from tb_od_order_sku t
+        where t.disabled = 0
+        <if test="orderId != null">AND t.orderId = #{orderId}</if>
+        <include refid="Pager.mysqlPage"/>
+    </select>
+
+    <select id="queryPageCount" parameterType="map" resultType="int">
+        select count(1) from tb_od_order_sku t
+        where t.disabled = 0
+        <if test="productId != null">AND t.productId = #{productId}</if>
     </select>
 </mapper>

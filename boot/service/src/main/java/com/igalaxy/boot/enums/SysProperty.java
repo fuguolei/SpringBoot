@@ -166,4 +166,44 @@ public class SysProperty {
 
     public static class StgFileStatusEnumValueHandler extends EnumValueHandler<StgFileStatusEnum> {
     }
+
+    public enum SysSaleEnum implements ValueEnum {
+        NoSale(0, "下架"),
+        Sale(1, "上架");
+        private int value;
+        private String desc;
+
+        SysSaleEnum(int value, String desc) {
+            this.value = value;
+            this.desc = desc;
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+
+        @Override
+        public int getValue() {
+            return value;
+        }
+
+        @Override
+        public String getDesc() {
+            return desc;
+        }
+
+        public SysSaleEnum valueOf(int value) {
+            switch (value) {
+                case 0:
+                    return NoSale;
+                case 1:
+                    return Sale;
+            }
+            throw new IllegalArgumentException("Cannot create evalue from value: " + value + "!");
+        }
+    }
+
+    public static class SysSaleEnumValueHandler extends EnumValueHandler<SysSaleEnum> {
+    }
 }

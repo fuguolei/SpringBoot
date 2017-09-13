@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.igalaxy.boot.mapper.auth.AuthUserRoleMapper">
     <select id="queryPage" parameterType="map" resultType="AuthUserRole">
-        select t.* from v_sys_user_role t
+        select t.* from v_auth_user_role t
         where t.disabled = 0 and t.roleId = #{roleId}
         <if test="txtUserName != null">
             and t.userName like CONCAT('%', #{txtUserName},'%')
@@ -16,7 +16,7 @@
     </select>
 
     <select id="queryPageCount" parameterType="map" resultType="int">
-        select count(*) from v_sys_user_role t
+        select count(*) from v_auth_user_role t
         where t.disabled = 0 and t.roleId = #{roleId}
         <if test="txtUserName != null">
             and t.userName like CONCAT('%', #{txtUserName},'%')
@@ -34,7 +34,7 @@
         t.`account`
         FROM
         tb_usr_user t
-        LEFT JOIN v_sys_user_role r
+        LEFT JOIN v_auth_user_role r
         ON t.`id` = r.`userId`
         AND r.`disabled` = 0
         AND r.`roleId` = #{roleId}
@@ -43,21 +43,24 @@
     </select>
 
     <insert id="save" parameterType="AuthUserRole">
-        insert into tb_sys_user_role
+        insert into tb_auth_user_role
         (userId, roleId, createTime, createUser, updateTime, updateUser, disabled)
-        values(#{userId}, #{roleId}, now(), #{createUser}, now(), #{updateUser}, 0);
+        values(#{userId}, #{roleId}, #{createTime}, #{createUser}, #{updateTime}, #{updateUser}, 0)
+        <selectKey resultType="long" keyProperty="id">
+            select LAST_INSERT_ID() as id
+        </selectKey>
     </insert>
 
     <update id="delete" parameterType="AuthUserRole">
-        update tb_sys_user_role t
-        set t.updateTime = now(),
+        update tb_auth_user_role t
+        set t.updateTime = #{updateTime},
         t.updateUser = #{updateUser},
         t.disabled = 1
         where t.id = #{id}
     </update>
 
     <select id="queryById" parameterType="long" resultType="AuthUserRole">
-        select t.* from v_sys_user_role t
+        select t.* from v_auth_user_role t
         where t.id = #{id}
     </select>
 </mapper>

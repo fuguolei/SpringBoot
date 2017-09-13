@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.igalaxy.boot.mapper.ep.EpExpressMapper">
+
+    <insert id="save" parameterType="EpExpress">
+        INSERT INTO tb_ep_express (
+        `name`,
+        sale,
+        sort,
+        createTime,
+        createUser,
+        updateTime,
+        updateUser,
+        disabled
+        )VALUES (
+        #{name},
+        #{sale},
+        #{sort},
+        #{createTime},
+        #{createUser},
+        #{updateTime},
+        #{updateUser},
+        0
+        )
+        <selectKey resultType="long" keyProperty="id">
+            select LAST_INSERT_ID() as id
+        </selectKey>
+    </insert>
+
+    <update id="update" parameterType="EpExpress">
+        UPDATE tb_ep_express t
+        SET
+        <if test="name != null">t.name = #{name},</if>
+        <if test="sale != null">t.sale = #{sale},</if>
+        <if test="sort != null">t.sort = #{sort},</if>
+        t.updateTime = #{updateTime},
+        t.updateUser = #{updateUser}
+        where t.id = #{id}
+    </update>
+
+    <update id="delete" parameterType="EpExpress">
+        UPDATE tb_ep_express t
+        SET
+        t.disabled = 1,
+        t.updateTime = #{updateTime},
+        t.updateUser = #{updateUser}
+        where t.id = #{id}
+    </update>
+
+    <select id="queryById" parameterType="long" resultType="EpExpress">
+        SELECT * FROM tb_ep_express t
+        WHERE t.disabled = 0 AND t.id = #{id}
+    </select>
+
+    <select id="queryPage" parameterType="map" resultType="EpExpress">
+        SELECT
+        t.*
+        FROM tb_ep_express t
+        WHERE t.disabled = 0
+        ORDER BY t.sort
+        <include refid="Pager.mysqlPage"/>
+    </select>
+
+    <select id="queryPageCount" parameterType="map" resultType="int">
+        select count(1) from tb_ep_express t
+        where t.disabled = 0
+    </select>
+
+</mapper>

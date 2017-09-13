@@ -1,6 +1,7 @@
 package com.igalaxy.boot.service.od.impl;
 
 import com.igalaxy.boot.domain.dto.BaseResult;
+import com.igalaxy.boot.domain.dto.PageData;
 import com.igalaxy.boot.domain.gd.GdSKU;
 import com.igalaxy.boot.domain.od.OdOrderSKU;
 import com.igalaxy.boot.mapper.BaseMapper;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by fuguolei
@@ -53,5 +55,24 @@ public class OdOrderSKUServiceImpl extends BaseServiceImpl<OdOrderSKU> implement
                 }
             }
         return list;
+    }
+
+    @Override
+    public PageData queryPage(Map<String, Object> params) {
+        PageData pageData = super.queryPage(params);
+        List<OdOrderSKU> list = pageData.getRows();
+        if (list != null) {
+            GdSKU gdSKU;
+            for (OdOrderSKU o : list) {
+                gdSKU = gdSKUService.queryById(o.getSkuId());
+                if (gdSKU != null) {
+                    o.setName(gdSKU.getName());
+                    o.setPicture(gdSKU.getPicture());
+                    o.setNumber(gdSKU.getNumber());
+                }
+
+            }
+        }
+        return pageData;
     }
 }

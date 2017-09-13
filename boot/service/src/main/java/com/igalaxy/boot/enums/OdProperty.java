@@ -50,8 +50,10 @@ public class OdProperty {
     public enum OdOrderStatusEnum implements ValueEnum {
         Unpaid(1, "未支付"),
         Paid(2, "已支付"),
-        Cancel(3, "已取消"),
-        TimeOut(4, "已超时");
+        Delivery(3, "已发货"),
+        Finish(4, "已完成"),
+        Cancel(5, "已取消"),
+        TimeOut(6, "已超时");
         private int value;
         private String desc;
 

@@ -4,7 +4,6 @@ import com.igalaxy.boot.controller.WeChatController;
 import com.igalaxy.boot.domain.dto.BaseResult;
 import com.igalaxy.boot.domain.dto.PageData;
 import com.igalaxy.boot.domain.od.OdOrder;
-import com.igalaxy.boot.domain.od.OdOrderDetail;
 import com.igalaxy.boot.domain.od.OdOrderSKU;
 import com.igalaxy.boot.enums.OdProperty.OdPayWayEnum;
 import com.igalaxy.boot.service.od.OdOrderService;
@@ -61,12 +60,12 @@ public class OdOrderController extends WeChatController {
     public ModelAndView number(@PathVariable String number, HttpServletRequest request) {
         if (number == null)
             return new ModelAndView("od/order/no_found");
-        OdOrderDetail odOrderDetail = odOrderService.queryOdOrderDetailByNumber(number);
-        if (odOrderDetail == null)
+        OdOrder odOrder = odOrderService.queryOdOrderDetailByNumber(number);
+        if (odOrder == null)
             return new ModelAndView("od/order/no_found");
 
         Map<String, Object> wchatParams = getWchatParams(request);
-        wchatParams.put("order", odOrderDetail);
+        wchatParams.put("order", odOrder);
         return new ModelAndView("od/order/detail", wchatParams);
     }
 

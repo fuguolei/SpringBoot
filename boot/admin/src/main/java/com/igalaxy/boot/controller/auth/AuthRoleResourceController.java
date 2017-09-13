@@ -1,6 +1,6 @@
 package com.igalaxy.boot.controller.auth;
 
-import com.igalaxy.boot.controller.base.AdminController;
+import com.igalaxy.boot.controller.BaseController;
 import com.igalaxy.boot.domain.BaseDomain;
 import com.igalaxy.boot.domain.auth.*;
 import com.igalaxy.boot.domain.dto.BaseResult;
@@ -21,7 +21,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/auth/role/res")
-public class AuthRoleResourceController extends AdminController {
+public class AuthRoleResourceController extends BaseController {
 
     @Autowired
     AuthRoleService authRoleService;
@@ -88,7 +88,7 @@ public class AuthRoleResourceController extends AdminController {
             }
         }
 
-        return writeResultOld(response, tree);
+        return null;
     }
 
     @RequestMapping(value = "/delete.json", method = RequestMethod.POST)

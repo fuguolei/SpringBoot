@@ -13,6 +13,7 @@ public class OdOrderSKU extends BaseDomain {
     private Integer count;
 
     //
+    private String number;
     private String name;
     private String picture;
 
@@ -68,5 +69,13 @@ public class OdOrderSKU extends BaseDomain {
 
     public void setPicture(String picture) {
         this.picture = picture;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
     }
 }

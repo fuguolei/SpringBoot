@@ -28,8 +28,8 @@
         <typeHandler javaType="com.igalaxy.boot.enums.OdProperty$OdPayWayEnum"
                      handler="com.igalaxy.boot.enums.OdProperty$OdPayWayEnumValueHandler"/>
 
-        <typeHandler javaType="com.igalaxy.boot.enums.GdProperty$GdSaleEnum"
-                     handler="com.igalaxy.boot.enums.GdProperty$GdSaleEnumValueHandler"/>
+        <typeHandler javaType="com.igalaxy.boot.enums.SysProperty$SysSaleEnum"
+                     handler="com.igalaxy.boot.enums.SysProperty$SysSaleEnumValueHandler"/>
     </typeHandlers>
     <mappers>
         <!-- 公共配置 -->

@@ -1,11 +1,11 @@
 package com.igalaxy.boot.controller.auth;
 
-import com.igalaxy.boot.controller.base.AdminController;
-import com.igalaxy.boot.domain.dto.BaseResult1;
+import com.igalaxy.boot.controller.BaseController;
 import com.igalaxy.boot.domain.auth.SysStgData;
+import com.igalaxy.boot.domain.dto.BaseResult;
 import com.igalaxy.boot.enums.SysProperty;
-import com.igalaxy.boot.service.base.BaseService;
 import com.igalaxy.boot.service.auth.SysStgDataService;
+import com.igalaxy.boot.service.base.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Controller
 @RequestMapping("/sys/stgdata")
-public class StgdataController extends AdminController {
+public class StgdataController extends BaseController {
 
     @Autowired
     SysStgDataService sysStgDataService;
@@ -32,17 +32,17 @@ public class StgdataController extends AdminController {
 
     @RequestMapping(value = "/upload")
     @ResponseBody
-    public Object upload(@RequestParam("file") CommonsMultipartFile file, SysProperty.StgFilePrefixEnum prefix, Long bizId, HttpServletResponse response) {
+    public BaseResult upload(@RequestParam("file") CommonsMultipartFile file, SysProperty.StgFilePrefixEnum prefix, Long bizId, HttpServletResponse response) {
         try {
             SysStgData sysStgData = sysStgDataService.upload(file, prefix, bizId);
             sysStgData = sysStgDataService.queryById(sysStgData.getId());
-            return writeResult(response, new BaseResult1(true, "成功", sysStgData));
+            return BaseResult.ok(sysStgData);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
-            return writeErrorResult(response, -1, "无此文件列别");
+            return BaseResult.badRequest(-1, "无此文件列别");
         } catch (Exception e) {
             e.printStackTrace();
-            return writeErrorResult(response, -2, e.toString());
+            return BaseResult.badRequest(-2, e.toString());
         }
     }
 }

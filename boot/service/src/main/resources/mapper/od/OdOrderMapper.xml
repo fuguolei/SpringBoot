@@ -13,6 +13,8 @@
         t.userId,
         t.payWay,
         t.status,
+        t.expressId,
+        t.expressNumber,
         t.createUser,
         t.createTime,
         t.updateUser,
@@ -50,9 +52,9 @@
         #{payWay},
         #{status},
         #{createUser},
-        now(),
+        #{createTime},
         #{updateUser},
-        now(),
+        #{updateTime},
         0)
         <selectKey resultType="long" keyProperty="id">
             select LAST_INSERT_ID() as id
@@ -64,8 +66,10 @@
         SET
         <if test="payWay != null">t.payWay = #{payWay},</if>
         <if test="status != null">t.status = #{status},</if>
+        <if test="expressId != null">t.expressId = #{expressId},</if>
+        <if test="expressNumber != null">t.expressNumber = #{expressNumber},</if>
         t.updateUser = #{updateUser},
-        t.updateTime = now()
+        t.updateTime = #{updateTime}
         where t.id = #{id}
     </update>
 
@@ -75,11 +79,11 @@
         <if test="payWay != null">t.payWay = #{payWay},</if>
         <if test="status != null">t.status = #{status},</if>
         t.updateUser = #{updateUser},
-        t.updateTime = now()
+        t.updateTime = #{updateTime}
         where t.number = #{number}
     </update>
 
-    <select id="queryByNumber" parameterType="String" resultType="OdOrderDetail">
+    <select id="queryByNumber" parameterType="String" resultType="OdOrder">
         select
         <include refid="AllField"/>
         from tb_od_order t
@@ -88,16 +92,18 @@
 
     <update id="delete" parameterType="OdOrder">
         update tb_od_order t
-        set t.updateTime = now(),
+        set t.updateTime = #{updateTime},
         t.updateUser = #{updateUser},
         t.disabled = 1
         where t.id = #{id}
     </update>
 
-    <select id="queryPage" parameterType="map" resultType="OdOrderDetail">
+    <select id="queryPage" parameterType="map" resultType="OdOrder">
         select
-        <include refid="AllField"/>
+        <include refid="AllField"/>,
+        e.name expressName
         from tb_od_order t
+        LEFT JOIN tb_ep_express e ON t.expressId = e.id AND e.disabled = 0
         where t.disabled = 0
         <if test="status != null">
             and t.status = #{status}

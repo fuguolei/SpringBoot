@@ -10,7 +10,7 @@
     <script th:inline="javascript">
 
         wx.config({
-            debug: false,
+            debug: true,
             appId: [[${appId}]],
             timestamp: [[${timestamp}]],
             nonceStr: [[${nonceStr}]],
@@ -22,7 +22,7 @@
             ajax({
                 url: "/pay/wechat.json",
                 data: {
-                    orderId: [[${orderId}]]
+                    orderId: [[${order.id}]]
                 },
                 success: function (data) {
                     onBridgeReady(data.data);

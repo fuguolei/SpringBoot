@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>订单SKU管理</title>
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <link href="/css/bootstrap.min.css?v=3.3.6" rel="stylesheet"/>
+    <link href="/css/font-awesome.css?v=4.4.0" rel="stylesheet"/>
+    <link href="/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet"/>
+    <link href="/css/animate.css" rel="stylesheet"/>
+    <link href="/css/plugins/sweetalert/sweetalert.css" rel="stylesheet"/>
+    <link href="/css/plugins/iCheck/custom.css" rel="stylesheet"/>
+    <link href="/css/style.css?v=4.1.0" rel="stylesheet"/>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <!-- Panel Other -->
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>订单SKU管理</h5>
+            <div class="ibox-tools">
+                <a class="collapse-link">
+                    <i class="fa fa-chevron-up"></i>
+                </a>
+            </div>
+        </div>
+        <div class="ibox-content">
+            <div class="row row-lg">
+                <div class="col-sm-12">
+                    <!-- Example Events -->
+                    <div class="example-wrap">
+                        <div class="example">
+                            <div class="btn-group hidden-xs" id="dataTableEventsToolbar" role="group">
+                                <!--<button type="button" class="btn btn-outline btn-default" data-toggle="modal"-->
+                                <!--onclick="dataAdd()">-->
+                                <!--<i class="glyphicon glyphicon-plus" aria-hidden="true"></i>-->
+                                <!--</button>-->
+                                <!--<button type="button" class="btn btn-outline btn-default" onclick="dataDelete()">-->
+                                <!--<i class="glyphicon glyphicon-trash" aria-hidden="true"></i>-->
+                                <!--</button>-->
+                            </div>
+                            <table id="dataTable" th:attr="data-url='list.json?orderId='+${orderId}">
+                                <thead>
+                                <tr>
+                                    <th data-field="state" data-checkbox="true"></th>
+                                    <th data-field="number">SKU编号</th>
+                                    <th data-field="name">SKU名称</th>
+                                    <th data-field="price">单价</th>
+                                    <th data-field="count">数量</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- End Example Events -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Panel Other -->
+
+</div>
+
+<!-- 全局js -->
+<script src="/js/jquery.min.js?v=2.1.4"></script>
+<script src="/js/bootstrap.min.js?v=3.3.6"></script>
+
+<!-- 自定义js -->
+<script src="/js/content.js?v=1.0.0"></script>
+
+<!-- iCheck -->
+<script src="/js/plugins/iCheck/icheck.min.js"></script>
+
+<!-- Bootstrap table -->
+<script src="/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+
+<!-- jQuery Validation plugin javascript-->
+<script src="/js/plugins/validate/jquery.validate.min.js"></script>
+<script src="/js/plugins/validate/messages_zh.min.js"></script>
+
+<!-- Peity -->
+<script src="/js/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="/js/common/common.js?18"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    function getOperation(id) {
+        return ''
+    }
+
+    function dataDelete() {
+        var list = $('#dataTable').bootstrapTable('getSelections');
+        if (list.length == 0) {
+            sysAlert("请勾选数据");
+            return;
+        }
+        if (list.length > 1) {
+            sysAlert("一次只能删除一条数据")
+            return;
+        }
+        dataDeleteAlert(function (isConfirm) {
+            if (isConfirm) {
+                ajax({
+                    url: "delete.json",
+                    data: {
+                        id: list[0].id
+                    },
+                    successCallback: function (result) {
+                        $('#dataTable').bootstrapTable('refresh');
+                    }
+                })
+            }
+        })
+    }
+
+    function dataAdd() {
+        $("#formTitle").text("新增");
+        $('#modal-form').modal('show')
+        document.getElementById("dataForm").reset();
+    }
+
+    function dataEdit(id) {
+        $("#formTitle").text("修改");
+        $('#modal-form').modal('show')
+        var row = $('#dataTable').bootstrapTable('getRowByUniqueId', id);
+        $("#id").val(row.id);
+        $("#number").val(row.number);
+        $("#status").val(row.status);
+        $("#type").val(row.type);
+        $("#expressId").val(row.expressId);
+        $("#expressNumber").val(row.expressNumber);
+    }
+
+    $().ready(function () {
+        $("#dataTable").tableInit();
+        $("#dataForm").validate();
+    });
+
+    function dataSubmit() {
+        var url = "add.json";
+        if ($("#id").val() != '')
+            url = "edit.json";
+        $("#dataForm").formSubmit({
+            url: url,
+            success: function () {
+                $('#modal-form').modal('hide')
+                $('#dataTable').bootstrapTable('refresh');
+            }
+        });
+    }
+    /*]]>*/
+</script>
+</body>
+
+</html>

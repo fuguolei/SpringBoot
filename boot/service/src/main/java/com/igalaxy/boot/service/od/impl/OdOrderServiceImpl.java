@@ -1,12 +1,11 @@
 package com.igalaxy.boot.service.od.impl;
 
 import com.igalaxy.boot.domain.dto.BaseResult;
-import com.igalaxy.boot.domain.dto.BaseResult1;
 import com.igalaxy.boot.domain.dto.PageData;
 import com.igalaxy.boot.domain.gd.GdSKU;
 import com.igalaxy.boot.domain.od.OdOrder;
-import com.igalaxy.boot.domain.od.OdOrderDetail;
 import com.igalaxy.boot.domain.od.OdOrderSKU;
+import com.igalaxy.boot.domain.usr.UsrUser;
 import com.igalaxy.boot.enums.OdProperty.OdOrderStatusEnum;
 import com.igalaxy.boot.enums.OdProperty.OdPayWayEnum;
 import com.igalaxy.boot.mapper.BaseMapper;
@@ -15,6 +14,7 @@ import com.igalaxy.boot.service.base.BaseServiceImpl;
 import com.igalaxy.boot.service.gd.GdSKUService;
 import com.igalaxy.boot.service.od.OdOrderSKUService;
 import com.igalaxy.boot.service.od.OdOrderService;
+import com.igalaxy.boot.service.usr.UsrUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,9 +38,27 @@ public class OdOrderServiceImpl extends BaseServiceImpl<OdOrder> implements OdOr
     @Autowired
     GdSKUService gdSKUService;
 
+    @Autowired
+    UsrUserService usrUserService;
+
     @Override
     public BaseMapper<OdOrder> getMapper() {
         return odOrderMapper;
+    }
+
+    @Override
+    public PageData queryPage(Map<String, Object> params) {
+        PageData<OdOrder> pageData = super.queryPage(params);
+        List<OdOrder> list = pageData.getRows();
+        if (list != null) {
+            UsrUser usrUser;
+            for (OdOrder o : list) {
+                usrUser = usrUserService.queryById(o.getUserId());
+                if (usrUser != null)
+                    o.setUserName(usrUser.getName());
+            }
+        }
+        return pageData;
     }
 
     @Override
@@ -87,8 +105,8 @@ public class OdOrderServiceImpl extends BaseServiceImpl<OdOrder> implements OdOr
     }
 
     @Override
-    public OdOrderDetail queryOdOrderDetailByNumber(String number) {
-        OdOrderDetail detail = queryByNumber(number);
+    public OdOrder queryOdOrderDetailByNumber(String number) {
+        OdOrder detail = queryByNumber(number);
         if (detail == null)
             return null;
         detail.setSkus(odOrderSKUService.queryListByOrderId(detail.getId()));
@@ -96,7 +114,7 @@ public class OdOrderServiceImpl extends BaseServiceImpl<OdOrder> implements OdOr
     }
 
     @Override
-    public OdOrderDetail queryByNumber(String number) {
+    public OdOrder queryByNumber(String number) {
         return odOrderMapper.queryByNumber(number);
     }
 
@@ -114,10 +132,10 @@ public class OdOrderServiceImpl extends BaseServiceImpl<OdOrder> implements OdOr
     @Override
     public PageData queryMyOdOrderDetailPageList(Map<String, Object> params) {
         params.put("userId", getUserId());
-        PageData pageData = queryPageList(params);
-        List<OdOrderDetail> list = (List<OdOrderDetail>) pageData.getRows();
+        PageData pageData = queryPage(params);
+        List<OdOrder> list = (List<OdOrder>) pageData.getRows();
         if (list != null)
-            for (OdOrderDetail detail : list)
+            for (OdOrder detail : list)
                 detail.setSkus(odOrderSKUService.queryListByOrderId(detail.getId()));
         return pageData;
     }

@@ -1,18 +1,30 @@
 package com.igalaxy.boot.domain.gd;
 
 import com.igalaxy.boot.domain.BaseDomain;
-import com.igalaxy.boot.enums.GdProperty.GdSaleEnum;
+import com.igalaxy.boot.enums.SysProperty.SysSaleEnum;
 
 /**
  * Created by fuguolei on 2017/8/31.
  */
-public class GdProduct  extends BaseDomain {
+public class GdProduct extends BaseDomain {
     private Long type;
     private Long number;
     private String name;
-    private GdSaleEnum sale;
-    private String categoryTitle;
+    private SysSaleEnum sale;
+    private String title;//小分类title
     private Integer sort;
+
+    //
+    private String typeName;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
 
     public Long getType() {
         return type;
@@ -38,11 +50,11 @@ public class GdProduct  extends BaseDomain {
         this.name = name;
     }
 
-    public GdSaleEnum getSale() {
+    public SysSaleEnum getSale() {
         return sale;
     }
 
-    public void setSale(GdSaleEnum sale) {
+    public void setSale(SysSaleEnum sale) {
         this.sale = sale;
     }
 
@@ -54,11 +66,11 @@ public class GdProduct  extends BaseDomain {
         this.sort = sort;
     }
 
-    public String getCategoryTitle() {
-        return categoryTitle;
+    public String getTypeName() {
+        return typeName;
     }
 
-    public void setCategoryTitle(String categoryTitle) {
-        this.categoryTitle = categoryTitle;
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 }

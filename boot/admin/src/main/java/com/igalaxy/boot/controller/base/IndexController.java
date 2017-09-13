@@ -1,5 +1,6 @@
 package com.igalaxy.boot.controller.base;
 
+import com.igalaxy.boot.controller.BaseController;
 import com.igalaxy.boot.domain.auth.AuthResource;
 import com.igalaxy.boot.domain.dto.MenuJson;
 import com.igalaxy.boot.service.auth.AuthResourceService;
@@ -22,7 +23,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/")
-public class AdminIndexController extends AdminController {
+public class IndexController extends BaseController {
 
     @Resource
     private AuthResourceService authResourceService;

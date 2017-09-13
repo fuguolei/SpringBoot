@@ -32,9 +32,9 @@
         #{skuId},
         #{count},
         #{createUser},
-        now(),
+        #{createTime},
         #{updateUser},
-        now(),
+        #{updateTime},
         0)
         <selectKey resultType="long" keyProperty="id">
             select LAST_INSERT_ID() as id
@@ -53,7 +53,7 @@
         SET
         t.`count` = #{count},
         t.updateUser = #{updateUser},
-        t.updateTime = now()
+        t.updateTime = #{updateTime}
         where t.id = #{id} AND t.disabled = 0
     </update>
 
@@ -62,7 +62,7 @@
         SET
         t.disabled = 1,
         t.updateUser = #{updateUser},
-        t.updateTime = now()
+        t.updateTime = #{updateTime}
         where t.id = #{id} AND t.disabled = 0
     </update>
 
@@ -89,7 +89,7 @@
         SET
         t.disabled = 1,
         t.updateUser = #{updateUser},
-        t.updateTime = now()
+        t.updateTime = #{updateTime}
         where t.userId = #{userId} AND t.disabled = 0
     </update>
 

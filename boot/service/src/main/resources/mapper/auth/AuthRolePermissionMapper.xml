@@ -3,14 +3,14 @@
 <mapper namespace="com.igalaxy.boot.mapper.auth.AuthRolePermissionMapper">
 
     <select id="queryByRoleIdPermissionId" parameterType="map" resultType="AuthRolePermission">
-        SELECT * FROM tb_sys_role_permission t
+        SELECT * FROM tb_auth_role_permission t
         WHERE t.roleId = #{roleId} AND t.permissionId = #{permissionId} AND t.disabled = 0
     </select>
 
     <update id="deleteByRoleIdPermissionId" parameterType="map">
-        UPDATE tb_sys_role_permission t
+        UPDATE tb_auth_role_permission t
         SET t.disabled = 1,
-        t.updateTime = now(),
+        t.updateTime = #{updateTime},
         t.updateUser = #{updateUser}
         WHERE t.roleId = #{roleId} AND t.permissionId = #{permissionId} AND t.disabled = 0
     </update>
@@ -23,17 +23,17 @@
         rol.`id`,
         role.name roleName
         FROM
-        tb_sys_permission per
-        LEFT JOIN tb_sys_role_permission rol
+        tb_auth_permission per
+        LEFT JOIN tb_auth_role_permission rol
         ON per.`id` = rol.`permissionId`
         AND rol.`disabled` = 0
-        left join tb_sys_role role
+        left join tb_auth_role role
         on role.id = rol.roleId AND role.disabled = 0
         WHERE rol.id = #{id} AND per.disabled = 0
     </select>
 
     <!--<update id="update" parameterType="AuthRolePermission">-->
-    <!--update tb_sys_role t-->
+    <!--update tb_auth_role t-->
     <!--<trim prefix="set" suffixOverrides=",">-->
     <!--t.updateTime = now(),-->
     <!--t.updateUser = #{updateUser},-->
@@ -44,7 +44,7 @@
     <!--</update>-->
 
     <!--<update id="delete" parameterType="AuthRolePermission">-->
-    <!--update tb_sys_role t-->
+    <!--update tb_auth_role t-->
     <!--set t.updateTime = now(),-->
     <!--t.updateUser = #{updateUser},-->
     <!--t.disabled = 1-->
@@ -52,8 +52,8 @@
     <!--</update>-->
 
     <insert id="save" parameterType="AuthRolePermission">
-        insert into tb_sys_role_permission (roleId, permissionId, createTime, updateTime, createUser, updateUser, disabled)
-        values (#{roleId}, #{permissionId}, now(), now(), #{createUser}, #{updateUser}, 0)
+        insert into tb_auth_role_permission (roleId, permissionId, createTime, updateTime, createUser, updateUser, disabled)
+        values (#{roleId}, #{permissionId}, #{createTime}, #{updateTime}, #{createUser}, #{updateUser}, 0)
         <selectKey resultType="long" keyProperty="id">
             select LAST_INSERT_ID() as id
         </selectKey>

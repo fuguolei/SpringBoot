@@ -627,12 +627,12 @@ body.canvas-menu.mini-navbar nav.navbar-static-side {
 }
 
 .top-navigation .wrapper.wrapper-content {
-    padding: 40px;
+    padding: 0px;
 }
 
 .top-navigation.body-small .wrapper.wrapper-content,
 .body-small .top-navigation .wrapper.wrapper-content {
-    padding: 40px 0px 40px 0px;
+    padding: 0px 0px 0px 0px;
 }
 
 .navbar-toggle {
@@ -3519,7 +3519,7 @@ video {
 }
 
 .wrapper-content {
-    padding: 20px;
+    padding: 0px;
 }
 
 #page-wrapper {

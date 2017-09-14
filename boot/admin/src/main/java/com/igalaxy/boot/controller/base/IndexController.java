@@ -47,4 +47,8 @@ public class IndexController extends BaseController {
         return new ModelAndView("index", params);
     }
 
+    @RequestMapping(value = "index_v3.html")
+    public String index_v3() {
+        return "index_v3";
+    }
 }

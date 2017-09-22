@@ -47,10 +47,21 @@ public class UsrWeChatServiceImpl extends BaseServiceImpl<UsrWechat> implements 
 
     public BaseResult oauth(String code) {
         WeiXinTockenResponse tocken = getAccessToken(code);
-        UsrUser usrUser = usrUserService.queryByOpenId(tocken.openid);
-        if (usrUser == null) {
+        if ("snsapi_base".equals(tocken.scope)) {
+            UsrUser usrUser = usrUserService.queryByOpenId(tocken.openid);
+            if (usrUser == null)
+                return BaseResult.badRequest(-5, "需要snsapi_userinfo获取code");
+            Subject subject = SecurityUtils.getSubject();
+            UsernamePasswordToken token = new UsernamePasswordToken(usrUser.getAccount(), usrUser.getPassword());
+            try {
+                subject.login(token);//验证角色和权限
+                SessionUtils.setUserId(usrUser.getId());
+            } catch (Exception e) {
+                return BaseResult.badRequest("认证失败");
+            }
+        } else {
             WeiXinUserInfoResponse userInfo = getUserInfo(tocken);
-            usrUser = new UsrUser();
+            UsrUser usrUser = new UsrUser();
             usrUser.setName(userInfo.nickname);
             usrUser.setHead(userInfo.headimgurl);
             usrUser.setAccount(userInfo.openid);
@@ -66,14 +77,6 @@ public class UsrWeChatServiceImpl extends BaseServiceImpl<UsrWechat> implements 
             result = save(usrWechat);
             if (!result.isSuccess())
                 return result;
-        }
-        Subject subject = SecurityUtils.getSubject();
-        UsernamePasswordToken token = new UsernamePasswordToken(usrUser.getAccount(), usrUser.getPassword());
-        try {
-            subject.login(token);//验证角色和权限
-            SessionUtils.setUserId(usrUser.getId());
-        } catch (Exception e) {
-            return BaseResult.badRequest("认证失败");
         }
         return BaseResult.ok();
     }

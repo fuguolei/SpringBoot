@@ -30,7 +30,7 @@ public class UsrWeChatController extends BaseController {
 
     @RequestMapping("/index.html")
     public String index_jsp(String url, HttpServletResponse response) {
-        String location = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + APP_ID + "&redirect_uri=http%3A%2F%2F" + HOST + "%2Fusr%2Fwechat%2Freturn.html&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
+        String location = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + APP_ID + "&redirect_uri=http%3A%2F%2F" + HOST + "%2Fusr%2Fwechat%2Freturn.html&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect";
         response.addHeader("location", location);
         response.setStatus(302);
         return null;
@@ -40,13 +40,18 @@ public class UsrWeChatController extends BaseController {
     public String returnHtml(HttpServletRequest request, String code, HttpServletResponse response) {
         if (code != null && code.length() > 0) {
             BaseResult result = usrWechatService.oauth(code);
-            if (result.isSuccess())
+            if (result.isSuccess()){
                 try {
                     WebUtils.redirectToSavedRequest(request, response, "/");
                 } catch (IOException e) {
                     e.printStackTrace();
                     return "/";
                 }
+            } else {
+                String location = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + APP_ID + "&redirect_uri=http%3A%2F%2F" + HOST + "%2Fusr%2Fwechat%2Freturn.html&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
+                response.addHeader("location", location);
+                response.setStatus(302);
+            }
         }
         return null;
     }

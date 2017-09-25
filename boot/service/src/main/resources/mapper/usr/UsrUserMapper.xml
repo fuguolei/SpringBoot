@@ -82,16 +82,13 @@
         </if>
     </select>
 
-    <insert id="save" parameterType="UsrUser">
+    <insert id="save" parameterType="UsrUser" useGeneratedKeys="true" keyProperty="id">
         insert into tb_usr_user
         (`name`, account, password,createUser, createTime, updateUser, updateTime, disabled,
         repeatPassword)
         values
         (#{name}, #{account}, #{password}, #{createUser}, #{createTime}, #{updateUser}, #{updateTime}, 0,
         #{repeatPassword})
-        <selectKey resultType="long" keyProperty="id">
-            select LAST_INSERT_ID() as id
-        </selectKey>
     </insert>
 
     <update id="update" parameterType="UsrUser">

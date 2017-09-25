@@ -28,7 +28,7 @@
         where t.disabled = 0 and t.id = #{id}
     </select>
 
-    <insert id="save" parameterType="OdOrder">
+    <insert id="save" parameterType="OdOrder" useGeneratedKeys="true" keyProperty="id">
         insert into tb_od_order (
         `number`,
         `sum`,
@@ -56,9 +56,6 @@
         #{updateUser},
         #{updateTime},
         0)
-        <selectKey resultType="long" keyProperty="id">
-            select LAST_INSERT_ID() as id
-        </selectKey>
     </insert>
 
     <update id="update" parameterType="OdOrder">

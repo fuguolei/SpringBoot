@@ -9,7 +9,7 @@
         where t.disabled = 0 and t.id = #{id}
     </select>
 
-    <insert id="save" parameterType="OdOrderSKU">
+    <insert id="save" parameterType="OdOrderSKU" useGeneratedKeys="true" keyProperty="id">
         insert into tb_od_order_sku (
         orderId,
         skuId,
@@ -31,9 +31,6 @@
         #{updateUser},
         #{updateTime},
         0)
-        <selectKey resultType="long" keyProperty="id">
-            select LAST_INSERT_ID() as id
-        </selectKey>
     </insert>
 
     <insert id="batchSave" parameterType="java.util.List">

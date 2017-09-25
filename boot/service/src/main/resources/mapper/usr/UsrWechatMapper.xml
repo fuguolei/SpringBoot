@@ -10,7 +10,7 @@
     </select>
 
 
-    <insert id="save" parameterType="UsrWechat">
+    <insert id="save" parameterType="UsrWechat" useGeneratedKeys="true" keyProperty="id">
         insert into tb_usr_wechat (
         userId,
         openId,
@@ -30,9 +30,6 @@
         #{updateUser},
         #{updateTime},
         0)
-        <selectKey resultType="long" keyProperty="id">
-            select LAST_INSERT_ID() as id
-        </selectKey>
     </insert>
 
     <update id="update" parameterType="UsrWechat">

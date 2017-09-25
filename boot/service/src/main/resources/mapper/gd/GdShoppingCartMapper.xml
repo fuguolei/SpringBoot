@@ -16,7 +16,7 @@
         t.disabled
     </sql>
 
-    <insert id="save" parameterType="GdShoppingCart">
+    <insert id="save" parameterType="GdShoppingCart" useGeneratedKeys="true" keyProperty="id">
         insert into tb_gd_shopping_cart (
         userId,
         skuId,
@@ -36,9 +36,6 @@
         #{updateUser},
         #{updateTime},
         0)
-        <selectKey resultType="long" keyProperty="id">
-            select LAST_INSERT_ID() as id
-        </selectKey>
     </insert>
 
     <select id="queryById" parameterType="long" resultType="GdShoppingCart">

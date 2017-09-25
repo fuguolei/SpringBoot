@@ -10,14 +10,11 @@
         where id = #{id}
     </update>
 
-    <insert id="save" parameterType="AuthRoleResource">
+    <insert id="save" parameterType="AuthRoleResource" useGeneratedKeys="true" keyProperty="id">
         insert into tb_auth_role_resource
         (roleId, resourceId, createTime, createUser, updateTime, updateUser, disabled)
         values
         (#{roleId}, #{resourceId}, #{createTime}, #{createUser}, #{updateTime}, #{updateUser}, 0)
-        <selectKey resultType="long" keyProperty="id">
-            select LAST_INSERT_ID() as id
-        </selectKey>
     </insert>
 
     <select id="queryById" parameterType="long" resultType="AuthRoleResource">

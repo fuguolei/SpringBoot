@@ -93,7 +93,7 @@ public class ShiroConfiguration {
         filterChainDefinitionMap.put("/auth/login.json", "anon");
         filterChainDefinitionMap.put("/usr/wechat/**", "anon");
         filterChainDefinitionMap.put("/pay/wechat-notify", "anon");
-//        filterChainDefinitionMap.put("/**", "authc");
+        filterChainDefinitionMap.put("/**", "authc");
         shiroFilterFactoryBean
                 .setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;

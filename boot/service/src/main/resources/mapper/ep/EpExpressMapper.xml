@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.igalaxy.boot.mapper.ep.EpExpressMapper">
 
-    <insert id="save" parameterType="EpExpress">
+    <insert id="save" parameterType="EpExpress" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO tb_ep_express (
         `name`,
         sale,
@@ -24,9 +24,6 @@
         #{updateUser},
         0
         )
-        <selectKey resultType="long" keyProperty="id">
-            select LAST_INSERT_ID() as id
-        </selectKey>
     </insert>
 
     <update id="update" parameterType="EpExpress">

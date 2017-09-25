@@ -53,9 +53,7 @@ public abstract class BaseServiceImpl<T> implements BaseService<T> {
             ((BaseDomain) t).setUpdateUser(userId);
             ((BaseDomain) t).setUpdateTime(date);
         }
-        long id = getMapper().save(t);
-        if (t != null && t instanceof BaseDomain)
-            ((BaseDomain) t).setId(id);
+        getMapper().save(t);
         return BaseResult.ok(0, "添加成功", t);
     }
 

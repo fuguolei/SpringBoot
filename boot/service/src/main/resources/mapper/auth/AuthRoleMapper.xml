@@ -52,11 +52,8 @@
         where t.id = #{id}
     </update>
 
-    <insert id="save" parameterType="AuthRole">
+    <insert id="save" parameterType="AuthRole" useGeneratedKeys="true" keyProperty="id">
         insert into tb_auth_role (name, `description`, createTime, updateTime, createUser, updateUser, disabled)
         values (#{name}, #{description}, #{createTime}, #{updateTime}, #{createUser}, #{updateUser}, 0)
-        <selectKey resultType="long" keyProperty="id">
-            select LAST_INSERT_ID() as id
-        </selectKey>
     </insert>
 </mapper>

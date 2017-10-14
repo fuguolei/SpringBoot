@@ -22,6 +22,7 @@ import java.io.StringWriter;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.springframework.web.context.request.RequestAttributes.SCOPE_REQUEST;
 
@@ -73,7 +74,7 @@ public class CustomErrorAttributes extends DefaultErrorAttributes
             //fuguolei
             //具体异常提示，目前只处理shiro的登录状态异常和权限异常
             if (error instanceof UnauthenticatedException) {
-                errorAttributes.put("code", -1);
+                errorAttributes.put("code", -10);
                 errorAttributes.put("msg", "请登录");
 
                 //json返回数据时，htto status 返回200
@@ -81,7 +82,7 @@ public class CustomErrorAttributes extends DefaultErrorAttributes
                 return;
             }
             if (error instanceof UnauthorizedException) {
-                errorAttributes.put("code", -2);
+                errorAttributes.put("code", -10);
                 errorAttributes.put("msg", "您无此权限");
 
                 //json返回数据时，htto status 返回200

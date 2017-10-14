@@ -1,6 +1,6 @@
 package com.igalaxy.boot.exception;
 
-import com.igalaxy.boot.domain.dto.BaseResult1;
+import com.igalaxy.boot.domain.dto.BaseResult;
 import com.igalaxy.boot.util.HttpUtil;
 import com.igalaxy.boot.util.json.AppJsonUtils;
 import org.apache.shiro.authz.UnauthorizedException;
@@ -22,8 +22,7 @@ public class GlobalExceptionHandler {
         String uri = request.getRequestURI();
         String accept = request.getHeader("accept");
         if (uri.endsWith(".json") || (accept != null && accept.contains("json"))) {
-            BaseResult1 result = new BaseResult1(false, -2, "无此权限");
-            HttpUtil.writeJson(response, AppJsonUtils.toJson(result, null));
+            HttpUtil.writeJson(response, AppJsonUtils.toJsonOld(BaseResult.badRequest(-10, "无此权限")));
             return null;
         }
         ModelAndView view = new ModelAndView("401");

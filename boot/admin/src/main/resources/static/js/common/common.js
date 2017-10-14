@@ -32,10 +32,11 @@ function ajax(userConfig) {
             console.log(result)
             if (result.status == 200 && userConfig.successCallback) {
                 userConfig.successCallback(result);
-            } else if (result.status != 200 && userConfig.errorCallback) {
-                userConfig.errorCallback(result);
-            } else {
-                sysAlert(result.msg, "操作失败", "error");
+            } else if (result.status != 200) {
+                if (userConfig.errorCallback)
+                    userConfig.errorCallback(result);
+                else
+                    sysAlert(result.msg, "操作失败", "error");
             }
         },
         error: function (msg) {

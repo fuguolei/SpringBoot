@@ -13,6 +13,7 @@
     <link href="/css/plugins/sweetalert/sweetalert.css" rel="stylesheet"/>
     <link href="/css/plugins/iCheck/custom.css" rel="stylesheet"/>
     <link href="/css/style.css?v=4.1.0" rel="stylesheet"/>
+    <link href="/css/common.css" rel="stylesheet"/>
 </head>
 
 <body class="gray-bg">
@@ -50,6 +51,7 @@
                                 <tr>
                                     <th data-field="state" data-checkbox="true"></th>
                                     <th data-field="number">编号</th>
+                                    <th data-field="pictureImage" data-width="110px">图片</th>
                                     <th data-field="name">名称</th>
                                     <th data-field="price">现价</th>
                                     <th data-field="originalPrice">原价</th>
@@ -252,6 +254,7 @@
                 if (result.status == 200) {
                     var pageData = result.data.rows;
                     for (var i = 0; i < pageData.length; i++) {
+                        pageData[i].pictureImage = '<img src="' + pageData[i].picture + '" class="listImage"/>';
                         if (pageData[i].sale == 'Sale')
                             pageData[i].saleName = '上架';
                         else

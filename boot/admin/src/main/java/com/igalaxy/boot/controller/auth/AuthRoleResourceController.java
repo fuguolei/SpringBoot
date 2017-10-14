@@ -4,7 +4,7 @@ import com.igalaxy.boot.controller.BaseController;
 import com.igalaxy.boot.domain.BaseDomain;
 import com.igalaxy.boot.domain.auth.*;
 import com.igalaxy.boot.domain.dto.BaseResult;
-import com.igalaxy.boot.domain.dto.EasyUITree;
+import com.igalaxy.boot.domain.dto.TreeViewNode;
 import com.igalaxy.boot.enums.SysProperty.WhetherEnum;
 import com.igalaxy.boot.service.auth.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,52 +43,54 @@ public class AuthRoleResourceController extends BaseController {
         request.setAttribute("roleId", roleId);
         AuthRole role = authRoleService.queryById(roleId);
         writeLog("进入 " + role.getName() + " 角色菜单设置页面");
-        return "auth/roleResource";
+        return "auth/resource";
     }
 
-    @RequestMapping(value = "/getAllRoleTree.json", method = RequestMethod.POST)
-    public String getAllRoleTree(long roleId, HttpServletResponse response, HttpServletRequest request) {
+    @RequestMapping(value = "/getResource.json", method = RequestMethod.POST)
+    @ResponseBody
+    public BaseResult getResource(long roleId) {
         List<AuthResource> list = authResourceService.selectAllResourceByRoleId(roleId);
-        List<EasyUITree> tree = new ArrayList<>();
+        List<TreeViewNode> tree = new ArrayList<>();
         if (null != list && list.size() > 0) {
-            for (AuthResource category : list) {
-                if (category.getParentId() == null) {
-                    EasyUITree categoryNode = new EasyUITree();
-                    categoryNode.setId(category.getId());
-                    categoryNode.setText(category.getName());
-                    categoryNode.setState("open");
-                    categoryNode.setChecked(WhetherEnum.Yes.equals(category.getHasPermission()));
-                    categoryNode.setAttributes(category);
+            for (AuthResource authResource : list) {
+                if (authResource.getParentId() == null) {
+                    TreeViewNode treeViewNode = new TreeViewNode();
+                    treeViewNode.setId(authResource.getId());
+                    treeViewNode.setText(authResource.getName());
+                    treeViewNode.setType(1);
+                    treeViewNode.setChecked(WhetherEnum.Yes.equals(authResource.getHasPermission()));
                     // List<EasyUITree> childNodes = new ArrayList<>();
                     for (AuthResource node : list) {
                         if (node.getParentId() == null) continue;
-                        if (category.getId().longValue() == node.getParentId().longValue()) {
-                            EasyUITree childNode = new EasyUITree();
+                        if (authResource.getId().longValue() == node.getParentId().longValue()) {
+                            TreeViewNode childNode = new TreeViewNode();
                             childNode.setId(node.getId());
                             childNode.setText(node.getName());
+                            childNode.setType(1);
                             childNode.setChecked(WhetherEnum.Yes.equals(node.getHasPermission()));
-                            childNode.setAttributes(node);
                             List<AuthPermission> permissions = node.getPermissions();
                             if (permissions != null && permissions.size() > 0) {
                                 for (AuthPermission permission : permissions) {
-                                    EasyUITree permissionNode = new EasyUITree();
+                                    TreeViewNode permissionNode = new TreeViewNode();
                                     permissionNode.setChecked(WhetherEnum.Yes.equals(permission.getHasPermission()));
-                                    permissionNode.setState("open");
                                     permissionNode.setText(permission.getName());
                                     permissionNode.setId(permission.getId());
-                                    permissionNode.setAttributes(permission);
-                                    childNode.getChildren().add(permissionNode);
+                                    permissionNode.setType(0);
+                                    if (childNode.getNodes() == null)
+                                        childNode.setNodes(new ArrayList<>());
+                                    childNode.getNodes().add(permissionNode);
                                 }
                             }
-                            categoryNode.getChildren().add(childNode);
+                            if (treeViewNode.getNodes() == null)
+                                treeViewNode.setNodes(new ArrayList<>());
+                            treeViewNode.getNodes().add(childNode);
                         }
                     }
-                    tree.add(categoryNode);
+                    tree.add(treeViewNode);
                 }
             }
         }
-
-        return null;
+        return BaseResult.ok(tree);
     }
 
     @RequestMapping(value = "/delete.json", method = RequestMethod.POST)

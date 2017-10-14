@@ -11,7 +11,6 @@ import java.util.Properties;
  */
 public class MyConfiguration {
 
-
     @Bean
     public DefaultKaptcha captchaProducer() {
         DefaultKaptcha captchaProducer = new DefaultKaptcha();
@@ -29,5 +28,4 @@ public class MyConfiguration {
         captchaProducer.setConfig(config);
         return captchaProducer;
     }
-
 }

@@ -120,6 +120,7 @@
 <script>
     function getOperation(id) {
         return '<a onclick="dataEdit(' + id + ')">修改</a>'
+            + '<a href="/auth/role/res/index.html?roleId=' + id + '">权限</a>'
     }
 
     function dataDelete() {
